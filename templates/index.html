@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> Information </h1>
+  <table>
+    <tbody class="information">
+        <tr>
+          <td> <b>Server:</b> </td>
+          <td> {{ template_hostname }} </td>
+        </tr>
+        <tr>
+          <td> <b>Client:</b> </td>
+          <td> {{ template_request.remote_addr }} </td>
+        </tr>
+    </tbody>
+  </table>
+<h1> Request headers </h1>
+  <table>
+    <tbody class="headers">
+        {% for key,value in template_request.headers%}
+        <tr>
+          <td class="key"><b>{{ key }}:</b></td>
+          <td class="value">{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+<h1> Database </h1>
+  <table>
+    <tbody class="database">
+        {%if not template_db_status['Connected']%}
+        <tr>
+          <td class="key"><b>Connected:</b></td>
+          <td id="{{ template_db_status['Connected'] }}" class="value">{{ template_db_status['Connected'] }}</td>
+        </tr>
+        {% endif %}
+        {% if template_db_status['Connected']%}
+        {% for key,value in template_db_status.items()%}
+        <tr>
+          <td class="key"><b>{{ key }}:</b></td>
+          <td id="{{ value }}" class="value">{{ value }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+  </table>
+{%if template_db_status['Connected']%}
+<h1> Data </h1>
+  <table>
+    <tbody class="data">
+    <tr>
+      <th>ID</th>
+      <th>DATETIME</th>
+      <th>CLIENT</th>
+      <th>METHOD</th>
+      <th>PATH</th>
+      <th>SERVER</th>
+    </tr>
+    {%- for row in template_db_records %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>{{ row[3] }}</td>
+      <td>{{ row[4] }}</td>
+      <td>{{ row[5] }}</td>
+    </tr>
+    {%- endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}

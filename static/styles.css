@@ -1,0 +1,26 @@
+h1 {
+  background-color: darkblue;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  text-indent: 12px;
+}
+
+table {
+  border: 1px solid black;
+  width: 100%;
+}
+
+th,td {
+  border: 1px solid black;
+  width: 20%;
+  overflow: hidden;
+}
+
+#True {
+  color: green
+}
+
+#False {
+  color: red
+}

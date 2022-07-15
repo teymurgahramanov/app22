@@ -2,7 +2,8 @@ import os
 import socket
 import configparser
 import datetime
-from modules.database.mysql import Mysql
+from modules.database import Mysql
+from modules.ping import pong
 from flask import Flask, redirect, render_template, request, url_for
 
 config = configparser.ConfigParser()
@@ -23,8 +24,24 @@ hostname = socket.gethostname()
 
 @app.route('/')
 def index():
+  return render_template("index.html",template_request = request,template_hostname = hostname)
+
+@app.route('/headers')
+def headers():
+  return render_template("headers.html",template_request = request)
+
+@app.route('/database')
+def database():
   db.add_record(datetime.datetime.now(),request.remote_addr,request.method,request.path,hostname)
-  return render_template("index.html",template_request = request,template_hostname = hostname,template_db_status = db.db_status,template_db_records = db.get_records())
+  return render_template("database.html",template_db_status = db.status,template_db_records = db.get_records())
+
+@app.route('/api')
+def api():
+  return render_template("api.html")
+
+@app.route('/ping')
+def ping():
+  return pong()
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0',port=5000)

@@ -1,3 +1,7 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 h1 {
   background-color: darkblue;
   color: white;
@@ -7,20 +11,64 @@ h1 {
 }
 
 table {
-  border: 1px solid black;
+  border: 1px solid #ddd !important;
   width: 100%;
 }
 
+th {
+  background-color: darkorange;
+  color: white;
+}
+
 th,td {
-  border: 1px solid black;
+  border: 1px solid #ddd !important;
   width: 20%;
   overflow: hidden;
 }
 
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: lightgray;
+}
+
 #True {
-  color: green
+  background-color: green;
+  color: white;
+  text-align: center;
+  font-weight: bold;
 }
 
 #False {
-  color: red
+  background-color: red;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: darkblue;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+li a:hover {
+  background-color: darkorange;
 }

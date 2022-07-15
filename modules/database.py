@@ -7,15 +7,15 @@ class Mysql:
     self.name = name
     self.user = user
     self.password = password
-    self.db_status = {'Connected': False, 'Writable': False}
+    self.status = {'Connected': False, 'Writable': False}
 
     try:
       self.db = mysql.connector.connect(host=self.host,port=self.port,database=self.name,user=self.user,password=self.password)
     except:
-      self.db_status['Connected'] = False
+      self.status['Connected'] = False
       pass
     else:
-      self.db_status['Connected'] = True
+      self.status['Connected'] = True
 
     try:
       db_cursor = self.db.cursor()
@@ -28,20 +28,20 @@ class Mysql:
         server VARCHAR(50));")
       db_cursor.close()
     except:
-      self.db_status['Writable'] = False
+      self.status['Writable'] = False
       pass
     else:
-      self.db_status['Writable'] = True
+      self.status['Writable'] = True
 
   def check_status(function):
     def wrapper(self,*args, **kwargs):
       try:
         function(self,*args, **kwargs)
       except:
-        self.db_status['Writable'] = False
+        self.status['Writable'] = False
         pass
       else:
-        self.db_status['Writable'] = True
+        self.status['Writable'] = True
     return wrapper
 
   @check_status
@@ -59,7 +59,14 @@ class Mysql:
       db_cursor.close()
       return records
     except:
-      self.db_status['Connected'] = False
+      self.status['Connected'] = False
+      try:
+        self.db = mysql.connector.connect(host=self.host,port=self.port,database=self.name,user=self.user,password=self.password)
+      except:
+        self.status['Connected'] = False
+        pass
+      else:
+        self.status['Connected'] = True
       pass
     else:
-      self.db_status['Connected'] = True
+      self.status['Connected'] = True

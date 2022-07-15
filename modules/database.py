@@ -10,7 +10,7 @@ class Mysql:
     self.status = {'Connected': False, 'Writable': False}
 
     try:
-      self.db = mysql.connector.connect(host=self.host,port=self.port,database=self.name,user=self.user,password=self.password)
+      self.db = mysql.connector.connect(host=self.host,port=self.port,database=self.name,user=self.user,password=self.password,connection_timeout=2)
     except:
       self.status['Connected'] = False
       pass
@@ -61,7 +61,7 @@ class Mysql:
     except:
       self.status['Connected'] = False
       try:
-        self.db = mysql.connector.connect(host=self.host,port=self.port,database=self.name,user=self.user,password=self.password)
+        self.db = mysql.connector.connect(host=self.host,port=self.port,database=self.name,user=self.user,password=self.password,connection_timeout=2)
       except:
         self.status['Connected'] = False
         pass

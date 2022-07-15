@@ -16,7 +16,7 @@ table {
 }
 
 th {
-  background-color: darkorange;
+  background-color: grey;
   color: white;
 }
 
@@ -35,14 +35,14 @@ tr:hover {
 }
 
 #True {
-  background-color: green;
+  background-color: darkgreen;
   color: white;
   text-align: center;
   font-weight: bold;
 }
 
 #False {
-  background-color: red;
+  background-color: darkred;
   color: white;
   text-align: center;
   font-weight: bold;

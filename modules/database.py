@@ -9,6 +9,10 @@ class Mysql:
     self.password = password
     self.status = {'Connected': False, 'Writable': False}
 
+    self.connect_to_db()
+    self.create_table()
+
+  def connect_to_db(self):
     try:
       self.db = mysql.connector.connect(host=self.host,port=self.port,database=self.name,user=self.user,password=self.password,connection_timeout=2)
     except:
@@ -17,6 +21,7 @@ class Mysql:
     else:
       self.status['Connected'] = True
 
+  def create_table(self):
     try:
       db_cursor = self.db.cursor()
       db_cursor.execute("CREATE TABLE IF NOT EXISTS requests \
@@ -33,40 +38,54 @@ class Mysql:
     else:
       self.status['Writable'] = True
 
-  def check_status(function):
+  def check_writable(function):
     def wrapper(self,*args, **kwargs):
       try:
         function(self,*args, **kwargs)
       except:
         self.status['Writable'] = False
-        pass
+        try:
+          self.db.is_connected()     
+        except:
+          try:
+            self.connect_to_db()
+          except:
+            self.status['Connected'] = False
+            pass
+          pass
       else:
         self.status['Writable'] = True
     return wrapper
 
-  @check_status
+  def check_connected(function):
+    def wrapper(self,*args, **kwargs):
+      #if not self.db.is_connected() or self.status['Connected'] == False:
+      try:
+        function(self,*args, **kwargs)  
+      except:
+        try:
+          self.connect_to_db()
+        except:
+          self.status['Connected'] = False
+          pass
+        pass
+      else:
+        self.status['Connected'] = True
+        returned = function(self,*args, **kwargs)
+        return returned
+    return wrapper
+
+  @check_writable
   def add_record(self,time,client,method,path,server):
     db_cursor = self.db.cursor()
     db_cursor.execute(f'INSERT INTO requests (time,client,method,path,server) VALUES ("{time}","{client}","{method}","{path}","{server}");')
     self.db.commit()
     db_cursor.close()
 
+  @check_connected
   def get_records(self):
-    try:
-      db_cursor = self.db.cursor(buffered=True)
-      db_cursor.execute('select * from requests order by id desc limit 5;')
-      records = db_cursor.fetchall()
-      db_cursor.close()
-      return records
-    except:
-      self.status['Connected'] = False
-      try:
-        self.db = mysql.connector.connect(host=self.host,port=self.port,database=self.name,user=self.user,password=self.password,connection_timeout=2)
-      except:
-        self.status['Connected'] = False
-        pass
-      else:
-        self.status['Connected'] = True
-      pass
-    else:
-      self.status['Connected'] = True
+    db_cursor = self.db.cursor(buffered=True)
+    db_cursor.execute('select * from requests order by id desc limit 5;')
+    records = db_cursor.fetchall()
+    db_cursor.close()
+    return records

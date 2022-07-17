@@ -5,33 +5,40 @@
 h1 {
   background-color: darkblue;
   color: white;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 24px;
   text-indent: 12px;
 }
 
 table {
-  border: 1px solid #ddd !important;
-  width: 100%;
+	border-collapse: collapse;
 }
 
-th {
-  background-color: grey;
-  color: white;
+table td {
+	padding: 15px;
 }
 
-th,td {
-  border: 1px solid #ddd !important;
-  width: 20%;
-  overflow: hidden;
+table th {
+	background-color: #54585d;
+	color: #ffffff;
+	font-size: 14px;
+	border: 1px solid #54585d;
 }
 
-tr:nth-child(even) {
-  background-color: #f2f2f2;
+table tbody td {
+	color: #636363;
+	border: 1px solid #dddfe1;
 }
 
-tr:hover {
-  background-color: lightgray;
+table tbody tr {
+	background-color: #f9fafb;
+}
+
+table tbody tr:nth-child(odd) {
+	background-color: #ffffff;
+}
+
+table tbody tr:hover {
+  background-color: lightgrey;
 }
 
 #True {
@@ -71,4 +78,12 @@ li a {
 
 li a:hover {
   background-color: darkorange;
+}
+
+code {
+  background-color: darkslateblue;
+  color: whitesmoke;
+  border-radius: 0.3rem;
+  padding: 4px 5px 5px;
+  white-space: nowrap;
 }

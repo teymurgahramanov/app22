@@ -31,9 +31,8 @@
     </tr>
     <tr>
     {%- for row in template_db_records[1] %}
-    {%- for data in row %}
-      <td>{{ row[data] }}</td>
-    {%- endfor %}
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
     {%- endfor %}
     </tr>
     </tbody>

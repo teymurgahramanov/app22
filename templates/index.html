@@ -1,17 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1> Information </h1>
-  <table>
-    <tbody class="information">
-        <tr>
-          <td> <b>Server:</b> </td>
-          <td> {{ template_hostname }} </td>
-        </tr>
-        <tr>
-          <td> <b>Client:</b> </td>
-          <td> {{ template_request.remote_addr }} </td>
-        </tr>
-    </tbody>
-  </table>
+<h1> About </h1>
+<p> Web Application and API for various testing purposes </p>
 {% endblock %}

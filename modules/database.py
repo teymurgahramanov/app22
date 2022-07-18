@@ -83,5 +83,7 @@ class Mysql:
     db_cursor = self.db.cursor(buffered=True)
     db_cursor.execute('select * from requests order by id desc limit 5;')
     records = db_cursor.fetchall()
+    columns = db_cursor.description
+    data = [columns,records]
     db_cursor.close()
-    return records
+    return data

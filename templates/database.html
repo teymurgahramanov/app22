@@ -25,23 +25,17 @@
   <table>
     <tbody class="data">
     <tr>
-      <th>ID</th>
-      <th>DATETIME</th>
-      <th>CLIENT</th>
-      <th>METHOD</th>
-      <th>PATH</th>
-      <th>SERVER</th>
+    {%- for column in template_db_records[0] %}
+      <th>{{ column[0] }}</th>
+    {% endfor %}
     </tr>
-    {%- for row in template_db_records %}
     <tr>
-      <td>{{ row[0] }}</td>
-      <td>{{ row[1] }}</td>
-      <td>{{ row[2] }}</td>
-      <td>{{ row[3] }}</td>
-      <td>{{ row[4] }}</td>
-      <td>{{ row[5] }}</td>
-    </tr>
+    {%- for row in template_db_records[1] %}
+    {%- for data in row %}
+      <td>{{ row[data] }}</td>
     {%- endfor %}
+    {%- endfor %}
+    </tr>
     </tbody>
   </table>
 {% endif %}

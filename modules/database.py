@@ -41,7 +41,7 @@ class Mysql:
   def check_writable(function):
     def wrapper(self,*args, **kwargs):
       try:
-        self.db.ping(reconnect=True, attempts=1, delay=2)
+        self.db.ping(reconnect=True, attempts=1)
       except:
         self.status['Connected'] = False
         pass

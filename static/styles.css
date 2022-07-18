@@ -9,6 +9,10 @@ h1 {
   text-indent: 12px;
 }
 
+p {
+  text-indent: 12px;
+}
+
 table {
 	border-collapse: collapse;
 }
@@ -18,10 +22,10 @@ table td {
 }
 
 table th {
-	background-color: #54585d;
-	color: #ffffff;
+	background-color: darkslategrey;
+  border: 1px solid darkslategrey;
+	color: whitesmoke;
 	font-size: 14px;
-	border: 1px solid #54585d;
 }
 
 table tbody td {
@@ -81,9 +85,22 @@ li a:hover {
 }
 
 code {
-  background-color: darkslateblue;
-  color: whitesmoke;
+  background-color: darkorange;
+  color: black;
+  font-weight: bold;
   border-radius: 0.3rem;
   padding: 4px 5px 5px;
   white-space: nowrap;
+  margin-left: 12px;
 }
+
+code:hover {
+  background-color: orange;
+  color: black;
+}
+
+a, a:visited, a:hover, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+

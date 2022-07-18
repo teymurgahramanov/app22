@@ -1,2 +1,5 @@
-def pong():
-  return {"ping": "pong"},200
+def pong(hostname):
+  return {
+    "host":hostname,
+    "ping": "pong"
+  },200

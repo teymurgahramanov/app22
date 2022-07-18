@@ -41,33 +41,29 @@ class Mysql:
   def check_writable(function):
     def wrapper(self,*args, **kwargs):
       try:
-        function(self,*args, **kwargs)
+        self.db.ping(reconnect=True, attempts=1, delay=2)
       except:
-        self.status['Writable'] = False
-        try:
-          self.db.is_connected()     
-        except:
-          try:
-            self.connect_to_db()
-          except:
-            self.status['Connected'] = False
-            pass
-          pass
+        self.status['Connected'] = False
+        pass
       else:
-        self.status['Writable'] = True
+        self.status['Connected'] = True
+        try:
+          function(self,*args, **kwargs)
+        except:
+          self.status['Writable'] = False
+          pass
+        else:
+          self.status['Writable'] = True
+          pass
+        pass
     return wrapper
 
   def check_connected(function):
     def wrapper(self,*args, **kwargs):
-      #if not self.db.is_connected() or self.status['Connected'] == False:
       try:
-        function(self,*args, **kwargs)  
+        self.db.ping(reconnect=True, attempts=1, delay=2)
       except:
-        try:
-          self.connect_to_db()
-        except:
-          self.status['Connected'] = False
-          pass
+        self.status['Connected'] = False
         pass
       else:
         self.status['Connected'] = True

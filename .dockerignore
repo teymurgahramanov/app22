@@ -1,0 +1,12 @@
+.venv/
+docs/
+**/.__pycache__
+**/.dockerignore
+**/Dockerfile*
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+LICENSE
+README.md
+

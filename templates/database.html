@@ -29,12 +29,13 @@
       <th>{{ column[0] }}</th>
     {% endfor %}
     </tr>
-    <tr>
     {%- for row in template_db_records[1] %}
-      <td>{{ row[1] }}</td>
-      <td>{{ row[2] }}</td>
+    <tr>
+    {%- for data in row %}
+      <td>{{ data }}</td>
     {%- endfor %}
-    </tr>
+    </tr>  
+    {%- endfor %}
     </tbody>
   </table>
 {% endif %}

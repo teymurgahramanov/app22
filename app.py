@@ -5,6 +5,7 @@ import datetime
 from modules.database import Mysql
 from modules.ping import pong
 from flask import Flask, redirect, render_template, request, url_for
+from werkzeug.middleware.proxy_fix import ProxyFix
 from prometheus_flask_exporter import PrometheusMetrics
 
 config = configparser.ConfigParser()
@@ -15,9 +16,10 @@ db_port=os.environ.get('DB_PORT') or config['DB']['PORT']
 db_name=os.environ.get('DB_NAME') or config['DB']['NAME'] 
 db_user=os.environ.get('DB_USER') or config['DB']['USER'] 
 db_pass=os.environ.get('DB_PASSWORD') or config['DB']['PASSWORD'] 
-db_auth=os.environ.get('DB_AUTH') or config['DB']['AUTH'] 
+db_auth=os.environ.get('DB_AUTH') or config['DB']['AUTH']
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.config['SECRET_KEY'] = os.urandom(24)
 db = Mysql(db_host,db_port,db_name,db_user,db_pass)
 metrics = PrometheusMetrics(app)
@@ -26,7 +28,7 @@ hostname = socket.gethostname()
 
 @app.route('/')
 def index():
-  return render_template("index.html",template_request = request,template_hostname = hostname)
+  return render_template("about.html",template_request = request,template_hostname = hostname)
 
 @app.route('/headers')
 def headers():

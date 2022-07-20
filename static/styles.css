@@ -9,8 +9,18 @@ h1 {
   text-indent: 12px;
 }
 
+h2 {
+  text-indent: 12px;
+}
+
 p {
   text-indent: 12px;
+  font-weight: normal;
+}
+
+#about {
+  font-size: 18px;
+  font-style: italic;
 }
 
 table {

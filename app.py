@@ -5,6 +5,7 @@ import datetime
 from modules.database import Mysql
 from modules.ping import pong
 from flask import Flask, redirect, render_template, request, url_for
+from prometheus_flask_exporter import PrometheusMetrics
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -19,6 +20,7 @@ db_auth=os.environ.get('DB_AUTH') or config['DB']['AUTH']
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 db = Mysql(db_host,db_port,db_name,db_user,db_pass)
+metrics = PrometheusMetrics(app)
 
 hostname = socket.gethostname()
 

@@ -94,6 +94,7 @@ a, a:visited, a:hover, a:active {
 code {
   background-color: darkorange;
   color: black;
+  font-family: monospace;
   font-weight: bold;
   border-radius: 0.3rem;
   padding: 4px 5px 5px;
@@ -103,7 +104,6 @@ code {
 
 code:hover {
   background-color: orange;
-  color: black;
 }
 
 

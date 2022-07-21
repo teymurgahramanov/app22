@@ -10,7 +10,7 @@
 <h1> ToDo </h1>
 <p>Simple API to manage To Do list. Might be useful when developing API Gateway policies or method based ACLs.</p>
 <code id="schema">
-curl -X POST {{ template_hostname }}/api/tasks -H 'Content-Type: application/json' -d '{"title":"Add task","Description":"!"}'
+curl -X POST {{ template_base_url }}/tasks -H 'Content-Type: application/json' -d '{"title":"Add task","Description":"!"}'
 </code></a>
 <a href="/tasks"><code id="method_get">GET /tasks</code></a>
 {% endblock %}

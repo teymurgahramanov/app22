@@ -44,20 +44,20 @@ def database():
 
 @app.route('/api')
 def api():
-  return render_template("api.html",template_hostname=request.host)
+  return render_template("api.html",template_base_url=request.base_url)
 
-@app.route('/ping')
+@app.route('/api/ping')
 def ping():
   return pong(hostname,request.remote_addr)
 
-@app.route('/tasks',methods=['GET','POST'])
+@app.route('/api/tasks',methods=['GET','POST'])
 def tasks():
   if request.method == 'GET':
     return todo.get_tasks()
   if request.method == 'POST':
     return todo.add_task()
 
-@app.route('/tasks/<task_id>',methods=['GET','PUT','DELETE'])
+@app.route('/api/tasks/<task_id>',methods=['GET','PUT','DELETE'])
 def get_task(task_id):
   if request.method == 'GET':
     return todo.get_task(task_id)

@@ -3,8 +3,14 @@
 {% block content %}
 <h1> Ping </h1>
 <p>Just Ping-Pong using GET method.</p>
-<a href="/ping"><code>GET /ping</code></a>
+<a href="/ping"><code id="method_get">GET /ping</code></a>
 <h1> Metrics </h1>
-<p>Prometheus metrics</p>
-<a href="/metrics"><code>GET /metrics</code></a>
+<p>Prometheus metrics.</p>
+<a href="/metrics"><code id="method_get">GET /metrics</code></a>
+<h1> ToDo </h1>
+<p>Simple API to manage To Do list. Might be useful when developing API Gateway policies or method based ACLs.</p>
+<code id="schema">
+curl -X POST {{ template_hostname }}/api/tasks -H 'Content-Type: application/json' -d '{"title":"Add task","Description":"!"}'
+</code></a>
+<a href="/tasks"><code id="method_get">GET /tasks</code></a>
 {% endblock %}

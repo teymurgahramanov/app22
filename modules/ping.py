@@ -1,6 +1,5 @@
 def pong(server,client):
   return {
     "server":server,
-    "client":client,
-    "ping": "pong"
+    "client":client
   },200

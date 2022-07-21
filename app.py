@@ -1,9 +1,12 @@
 import os
+import re
 import socket
 import configparser
 import datetime
+import json
 from modules.database import Mysql
 from modules.ping import pong
+from modules import todo
 from flask import Flask, redirect, render_template, request, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 from prometheus_flask_exporter import PrometheusMetrics
@@ -28,7 +31,7 @@ hostname = socket.gethostname()
 
 @app.route('/')
 def index():
-  return render_template("about.html",template_request = request,template_hostname = hostname)
+  return render_template("about.html")
 
 @app.route('/headers')
 def headers():
@@ -41,11 +44,27 @@ def database():
 
 @app.route('/api')
 def api():
-  return render_template("api.html")
+  return render_template("api.html",template_hostname=request.host)
 
 @app.route('/ping')
 def ping():
   return pong(hostname,request.remote_addr)
+
+@app.route('/tasks',methods=['GET','POST'])
+def tasks():
+  if request.method == 'GET':
+    return todo.get_tasks()
+  if request.method == 'POST':
+    return todo.add_task()
+
+@app.route('/tasks/<task_id>',methods=['GET','PUT','DELETE'])
+def get_task(task_id):
+  if request.method == 'GET':
+    return todo.get_task(task_id)
+  if request.method == 'PUT':
+    return todo.update_task(task_id)
+  if request.method == 'DELETE':
+    return todo.remove_task(task_id)
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0',port=5000)

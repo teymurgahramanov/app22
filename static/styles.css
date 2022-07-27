@@ -9,7 +9,7 @@ h1 {
   text-indent: 12px;
 }
 
-h2 {
+h3 {
   text-indent: 12px;
 }
 
@@ -102,8 +102,8 @@ a, a:visited, a:hover, a:active {
 }
 
 code {
-  background-color: darkorange;
-  color: black;
+  background-color: #37474F;
+  color: white;
   font-family: monospace;
   font-weight: bold;
   border-radius: 0.3rem;
@@ -113,7 +113,7 @@ code {
 }
 
 code:hover {
-  background-color: orange;
+  background-color: #546E7A;
 }
 
 

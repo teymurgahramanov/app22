@@ -1,5 +1,5 @@
-def pong(server,client):
+def pong():
   return {
-    "server":server,
-    "client":client
+    'request': 'ping',
+    'client': 'client'
   },200

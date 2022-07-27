@@ -4,9 +4,7 @@ import socket
 import configparser
 import datetime
 import json
-from modules.database import Mysql
-from modules.ping import pong
-from modules import todo
+from modules import database,todo
 from flask import Flask, redirect, render_template, request, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 from prometheus_flask_exporter import PrometheusMetrics
@@ -24,7 +22,7 @@ db_auth=os.environ.get('DB_AUTH') or config['DB']['AUTH']
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.config['SECRET_KEY'] = os.urandom(24)
-db = Mysql(db_host,db_port,db_name,db_user,db_pass)
+db = database.Mysql(db_host,db_port,db_name,db_user,db_pass)
 metrics = PrometheusMetrics(app)
 
 hostname = socket.gethostname()
@@ -45,10 +43,6 @@ def database():
 @app.route('/api')
 def api():
   return render_template("api.html",template_base_url=request.base_url)
-
-@app.route('/api/ping')
-def ping():
-  return pong(hostname,request.remote_addr)
 
 @app.route('/api/tasks',methods=['GET','POST'])
 def tasks():

@@ -1,16 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!--
 <h1> Ping </h1>
-<p>Just Ping-Pong using GET method.</p>
+<p>¯\_(ツ)_/¯</p>
 <a href="/ping"><code id="method_get">GET /ping</code></a>
-<h1> Metrics </h1>
-<p>Prometheus metrics.</p>
-<a href="/metrics"><code id="method_get">GET /metrics</code></a>
-<h1> ToDo </h1>
-<p>Simple API to manage To Do list. Might be useful when developing API Gateway policies or method based ACLs.</p>
-<code id="schema">
-curl -X POST {{ template_base_url }}/tasks -H 'Content-Type: application/json' -d '{"title":"Add task","Description":"!"}'
+-->
+<h1>ToDo</h1>
+<p>Useful when developing API Gateway policies or method based ACLs. Allows you to list, create, update and delete tasks.</p>
+
+<h3>Methods<h3>
+<p>GET, POST, PUT, DELETE</p>
+
+<h3>Content type<h3>
+<p>application/json</p>
+
+<h3>Create task<h3>
+<code id="snippet">
+curl -sX POST {{ template_base_url }}/tasks -H 'Content-Type: application/json' -d '{"title":"New task"}'
 </code></a>
-<a href="/tasks"><code id="method_get">GET /tasks</code></a>
+
+<h3>Get tasks<h3>
+<code id="snippet">
+curl -sX GET {{ template_base_url }}/tasks
+</code></a>
+<a href="/api/tasks"><code id="method_get">GET /api/tasks</code></a>
+
+<h3>Update task<h3>
+<code id="snippet">
+curl -sX POST {{ template_base_url }}/tasks/task_id -H 'Content-Type: application/json' -d '{"title":"Updated task"}'
+</code></a>
+
+<h3>Delete task<h3>
+<code id="snippet">
+curl -sX DELETE {{ template_base_url }}/tasks/task_id
+</code></a>
+
 {% endblock %}

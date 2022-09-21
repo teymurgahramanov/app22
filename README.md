@@ -9,6 +9,10 @@ _Most useful dummy Web application and API for your lab._
 - API Gateway and Load Balancer
 - Prometheus metrics
 
+
+## Database
+Dynamic database status. INSERT and SELECT queries will be performed on each refresh of page. Tested with MySQL and PostgreSQL.
+
 ## Usage
 ### Docker
 ```

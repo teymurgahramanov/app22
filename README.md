@@ -26,7 +26,5 @@ $ python app.py
 Use environment variables or [config.ini](./config.ini)
 ### Environment variables:
 - DB_URI \
-  Provide database URI. Example:
-  ```
-  postgresql://app22:app22@localhost/app22
-  ```
+  Provide database URI. Example: ```postgresql://app22:app22@localhost/app22```
+

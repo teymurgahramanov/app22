@@ -12,7 +12,6 @@ _Most useful dummy Web application and API for your lab._
 ## Usage
 ### Docker
 ```
-$ docker pull teymurgahramanov/app22:latest
 $ docker run --name app22 -p 5000:5000 teymurgahramanov/app22:latest
 ```
 ### Source

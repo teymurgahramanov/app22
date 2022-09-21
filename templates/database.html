@@ -2,6 +2,8 @@
 
 {% block content %}
 <h1> Database </h1>
+  {% if not template_db_status['Connected'] %} 
+  {% endif %}
   <table>
     <tbody class="database">
         {%if not template_db_status['Connected']%}
@@ -25,11 +27,11 @@
   <table>
     <tbody class="data">
     <tr>
-    {%- for column in template_db_records[0] %}
-      <th>{{ column[0] }}</th>
+    {%- for column in template_db_data[0] %}
+      <th>{{ column }}</th>
     {% endfor %}
     </tr>
-    {%- for row in template_db_records[1] %}
+    {%- for row in template_db_data[1] %}
     <tr>
     {%- for data in row %}
       <td>{{ data }}</td>

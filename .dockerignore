@@ -1,12 +1,12 @@
 .venv/
 docs/
+__pycache__
 **/.__pycache__
 **/.dockerignore
-**/Dockerfile*
+**/Dockerfile
 **/.git
 **/.gitignore
 **/.vs
 **/.vscode
 LICENSE
 README.md
-

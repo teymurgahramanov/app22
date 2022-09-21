@@ -3,7 +3,7 @@
 {% block content %}
 <h1> Request headers </h1>
   <table>
-    <tbody class="headers">
+    <tbody>
         {% for key,value in template_request.headers%}
         <tr>
           <td class="key"><b>{{ key }}:</b></td>

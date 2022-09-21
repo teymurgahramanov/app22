@@ -24,6 +24,9 @@ schema = {
 def task_not_found(task_id):
   return {'error': 'Task with ID ' + str(task_id) + ' Not Found'},404
 
+def deleted():
+  return {'result':'deleted'},200
+
 def get_tasks():
   return {'tasks': tasks},200
 
@@ -65,4 +68,4 @@ def remove_task(task_id):
     return task_not_found(task_id)
   else:
     tasks.pop(task_id)
-    return {'result': True}, 200
+    return deleted()

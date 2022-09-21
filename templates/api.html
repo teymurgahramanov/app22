@@ -1,39 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!--
-<h1> Ping </h1>
-<p>¯\_(ツ)_/¯</p>
-<a href="/ping"><code id="method_get">GET /ping</code></a>
--->
-<h1>ToDo</h1>
-<p>Useful when developing API Gateway policies or method based ACLs. Allows you to list, create, update and delete tasks.</p>
 
-<h3>Methods<h3>
-<p>GET, POST, PUT, DELETE</p>
+<h1>Task list</h1>
 
-<h3>Content type<h3>
-<p>application/json</p>
+<h3>Get tasks</h3>
+<a href="/api/tasks"><code>
+<pre>
+  <code class="language-json"">
+  GET /api/tasks
+  </code>
+</pre>
+</a>
 
-<h3>Create task<h3>
-<code id="snippet">
-curl -sX POST {{ template_base_url }}/tasks -H 'Content-Type: application/json' -d '{"title":"New task"}'
-</code></a>
+<h3>Create task</h3>
+<pre>
+  <code class="language-json">
+  POST /api/tasks
+  Content-Type: application/json
 
-<h3>Get tasks<h3>
-<code id="snippet">
-curl -sX GET {{ template_base_url }}/tasks
-</code></a>
-<a href="/api/tasks"><code id="method_get">GET /api/tasks</code></a>
+  {
+    "title":"New task"
+  }
+  </code>
+</pre>
 
-<h3>Update task<h3>
-<code id="snippet">
-curl -sX POST {{ template_base_url }}/tasks/task_id -H 'Content-Type: application/json' -d '{"title":"Updated task"}'
-</code></a>
+<h3>Update task</h3>
+<pre>
+  <code class="language-json">
+  PUT /api/tasks/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  Content-Type: application/json
 
-<h3>Delete task<h3>
-<code id="snippet">
-curl -sX DELETE {{ template_base_url }}/tasks/task_id
-</code></a>
+  {
+    "title":"Updated task"
+  }
+  </code>
+</pre>
+
+<h3>Delete task</h3>
+<pre>
+  <code class="language-json">
+  DELETE /api/tasks/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  </code>
+</pre>
 
 {% endblock %}

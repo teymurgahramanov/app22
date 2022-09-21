@@ -1,26 +1,40 @@
 * {
   font-family: Arial, Helvetica, sans-serif;
+  text-indent: 12px;
 }
 
 h1 {
   background-color: darkblue;
   color: white;
   font-size: 24px;
-  text-indent: 12px;
+}
+
+h2 {
+  font-size: 24px;
 }
 
 h3 {
-  text-indent: 12px;
+  font-size: 18px;
 }
 
 p {
-  text-indent: 12px;
-  font-weight: normal;
+  font-size: 16px;
 }
 
-#about {
-  font-size: 18px;
-  font-style: italic;
+dl {
+  margin-left: 24px;
+}
+
+dd {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+dt {
+  font-weight: bold;
 }
 
 table {
@@ -71,7 +85,7 @@ table tbody tr:hover {
   font-weight: bold;
 }
 
-ul {
+ul.header {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -79,20 +93,25 @@ ul {
   background-color: darkblue;
 }
 
-li {
+li.menu a {
   float: left;
-}
-
-li a {
   display: block;
   color: white;
   text-align: center;
   padding: 14px 16px;
-  text-decoration: none;
   font-weight: bold;
 }
 
-li a:hover {
+li.info {
+  float: right;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  font-weight: normal;
+}
+
+li.menu a:hover {
   background-color: darkorange;
   color: black;
 }
@@ -101,19 +120,13 @@ a, a:visited, a:hover, a:active {
   text-decoration: none;
 }
 
-code {
-  background-color: #37474F;
-  color: white;
-  font-family: monospace;
+.about {
   font-weight: bold;
-  border-radius: 0.3rem;
-  padding: 4px 5px 5px;
-  white-space: nowrap;
-  margin-left: 12px;
+  padding: 100px 0;
+  font-size: 48px;
+  white-space: pre-wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; 
 }
-
-code:hover {
-  background-color: #546E7A;
-}
-
-

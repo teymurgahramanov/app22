@@ -1,5 +1,5 @@
 # To do:
-- [ ] Authorization
+- [ ] Authentication
 - [X] ToDo API
 - [X] Prometheus metrics
 - [X] Improve db status checks functions in database module

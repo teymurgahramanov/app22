@@ -1,0 +1,13 @@
+name: Docker Image CI
+
+on:
+  pull_request:
+    branches-ignore: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Nothing yet
+        run: echo 'Nothing yet'

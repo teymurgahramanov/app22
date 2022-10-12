@@ -2,7 +2,6 @@ name: PR
 
 on:
   pull_request:
-    branches-ignore: [ $default-branch ]
 
 jobs:
   build:

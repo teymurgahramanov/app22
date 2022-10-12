@@ -7,11 +7,7 @@ _Most useful dummy Web application and API for your lab._
 - Request headers
 - Database failover and replication
 - API Gateway and Load Balancer
-- Prometheus metrics
-
-
-## Database
-Dynamic database status. INSERT and SELECT queries will be performed on each refresh of page. Tested with MySQL and PostgreSQL.
+- Prometheus scraping
 
 ## Usage
 ### Docker
@@ -28,6 +24,10 @@ $ python app.py
 ## Configuration
 Use environment variables or [config.ini](./config.ini)
 ### Environment variables:
-- DB_URI \
-  Provide database URI. Example: ```postgresql://app22:app22@localhost/app22```
-
+- DB_ENGINE\
+mysql, postgresql
+- DB_ENDPOINT\
+Example: localhost:3306
+- DB_NAME
+- DB_USERNAME
+- DB_PASSWORD

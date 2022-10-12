@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> Connection </h1>
+  <table>
+    <tbody class="database">
+        <tr>
+          <td class="key"><b>Client</b></td>
+          <td class="value">{{ template_client }}</td>
+        </tr>
+        <tr>
+          <td class="key"><b>Server</b></td>
+          <td class="value">{{ template_hostname }}</td>
+        </tr>
+    </tbody>
+  </table>
+<h1> Environment variables </h1>
+  <table>
+    <tbody>
+        {% for key,value in template_envvars%}
+        <tr>
+          <td class="key"><b>{{ key }}</b></td>
+          <td class="value">{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

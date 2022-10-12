@@ -12,12 +12,11 @@
   <body>
     <ul class=header>
       <li class=menu><a href="/">About</a></li>
+      <li class=menu><a href="/system">System</a></li>
       <li class=menu><a href="/headers">Headers</a></li>
       <li class=menu><a href="/database">Database</a></li>
       <li class=menu><a href="/api">API</a></li>
       <li class=menu><a href="/metrics">Metrics</a></li>
-      <li class=info>Server: {{ template_server }}</li>
-      <li class=info>Client: {{ template_client }}</li>
     </ul>
     {% block content %}
     {% endblock %}

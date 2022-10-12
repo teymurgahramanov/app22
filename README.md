@@ -7,6 +7,7 @@ _Most useful dummy Web application and API for your lab._
 - Request headers
 - Database failover and replication
 - API Gateway and Load Balancer
+- Environment variables
 - Prometheus scraping
 
 ## Usage

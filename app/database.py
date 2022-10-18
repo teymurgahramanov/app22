@@ -1,8 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from __main__ import app
 
-db = SQLAlchemy(app)
-status = {'Connected': False, 'Writable': False}
+db = SQLAlchemy()
+status = {'Connected': True, 'Writable': False}
 
 class Requests(db.Model):
   __tablename__ = "Requests"
@@ -62,12 +61,3 @@ def get_requests():
   columns = ['id','time','client']
   data = [columns,records]
   return data
-
-try:
-  db.create_all()
-except:
-  status['Connected'] = False
-  pass
-else:
-  status['Connected'] = True
-  pass

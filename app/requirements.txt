@@ -1,0 +1,5 @@
+config==0.5.1
+Flask==2.1.2
+flask_expects_json==1.7.0
+Flask_SQLAlchemy==2.5.1
+prometheus_flask_exporter==0.20.3

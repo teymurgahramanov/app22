@@ -8,8 +8,8 @@ from flask import Blueprint, render_template, request
 routes_blueprint = Blueprint('routes',__name__)
 
 @routes_blueprint.route('/')
-def about():
-  return render_template("about.html")
+def home():
+  return render_template("home.html")
 
 @routes_blueprint.route('/headers')
 def headers():

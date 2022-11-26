@@ -12,10 +12,15 @@ on:
       - master
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Test
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: test
         run: |
+          pip install -r requirements
           pytest

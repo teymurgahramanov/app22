@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.8.15
 RUN mkdir /app22
 WORKDIR /app22
 COPY . .

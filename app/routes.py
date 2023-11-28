@@ -3,9 +3,10 @@ import socket
 import datetime
 import app.database as db
 import app.todo as todo
-from flask import Blueprint, render_template, request
+from flask import Blueprint, jsonify, render_template, request
 
 routes_blueprint = Blueprint('routes',__name__)
+health_status = True
 
 @routes_blueprint.route('/')
 def home():
@@ -14,6 +15,22 @@ def home():
 @routes_blueprint.route('/headers')
 def headers():
   return render_template("headers.html",template_request = request)
+
+@routes_blueprint.route('/healthz_toggle')
+def toggle():
+  global health_status
+  health_status = not health_status
+  return jsonify(health_value=health_status)
+
+@routes_blueprint.route('/healthz')
+def healthz():
+  if health_status:
+    resp = jsonify(health="healthy")
+    resp.status_code = 200
+  else:
+    resp = jsonify(health="unhealthy")
+    resp.status_code = 500
+  return resp
 
 @routes_blueprint.route('/api')
 def api():

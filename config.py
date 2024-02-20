@@ -17,4 +17,4 @@ class Config():
 
 class devConfig(Config):
   SQLALCHEMY_ECHO = True
-  SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug'}
+  SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug','ssl': 'disable'}

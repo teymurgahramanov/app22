@@ -14,7 +14,8 @@ class Config():
   SECRET_KEY = os.urandom(24)
   SQLALCHEMY_DATABASE_URI = f'{db_uri}'
   SQLALCHEMY_TRACK_MODIFICATIONS = False
+  SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug',"connect_args": {'sslmode':"disable"}}
 
 class devConfig(Config):
   SQLALCHEMY_ECHO = True
-  SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug',"connect_args": dict(sslmode="disable")}
+  SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug',"connect_args": {'sslmode':"disable"}}

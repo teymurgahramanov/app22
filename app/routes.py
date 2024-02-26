@@ -8,10 +8,6 @@ from flask import Blueprint, jsonify, request
 routes_blueprint = Blueprint('routes',__name__)
 health_status = True
 
-@routes_blueprint.route('/')
-def home():
-  return render_template("home.html")
-
 @routes_blueprint.route('/system')
 def system():
   return render_template("system.html",template_envvars=os.environ.items(),template_hostname = socket.gethostname(),template_client = request.remote_addr)

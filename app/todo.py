@@ -2,14 +2,7 @@ from flask import request
 from flask_expects_json import expects_json
 import uuid
 
-tasks = {
-  "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx": {
-    "title":"Check this task",
-    "description":"No more procrastination",
-    "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-    "done":True 
-  }
-}
+tasks = {}
 
 schema = {
   "type": "object",

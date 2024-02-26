@@ -10,11 +10,13 @@ health_status = True
 
 @routes_blueprint.route('/system')
 def system():
-  return render_template("system.html",template_envvars=os.environ.items(),template_hostname = socket.gethostname(),template_client = request.remote_addr)
+  envvars = [ (k,v) for k,v in os.environ.items()]
+  data = [("server",socket.gethostname()),("client",request.remote_addr)] + envvars
+  return jsonify({"data" : data})
 
 @routes_blueprint.route('/headers')
 def headers():
-  data = [ {k:v} for k,v in request.headers ]
+  data = [ (k,v) for k,v in request.headers ]
   return jsonify({"data" : data})
 
 @routes_blueprint.route('/database')

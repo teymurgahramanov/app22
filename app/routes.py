@@ -38,7 +38,7 @@ def database():
 def toggle():
   global healthy
   healthy = not healthy
-  return jsonify(health_value=healthy)
+  return jsonify(healthy=healthy)
 
 @routes_blueprint.route('/healthz')
 def healthz():

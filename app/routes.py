@@ -6,17 +6,23 @@ import app.todo as todo
 from flask import Blueprint, jsonify, request
 
 routes_blueprint = Blueprint('routes',__name__)
-health_status = True
+healthy = True
 
 @routes_blueprint.route('/system')
 def system():
-  envvars = [ (k,v) for k,v in os.environ.items()]
-  data = [("server",socket.gethostname()),("client",request.remote_addr)] + envvars
+  data = {"env":{},"sys":{}}
+  envVars = [ (k,v) for k,v in os.environ.items()]
+  for k,v in envVars:
+    data["env"][k] = v
+  data["sys"]["hostname"] = socket.gethostname()
+  data["sys"]["client"] = request.remote_addr
   return jsonify({"data" : data})
 
 @routes_blueprint.route('/headers')
 def headers():
-  data = [ (k,v) for k,v in request.headers ]
+  data = {}
+  for k,v in request.headers:
+    data[k] = v
   return jsonify({"data" : data})
 
 @routes_blueprint.route('/database')
@@ -30,13 +36,13 @@ def database():
 
 @routes_blueprint.route('/healthz/toggle')
 def toggle():
-  global health_status
-  health_status = not health_status
-  return jsonify(health_value=health_status)
+  global healthy
+  healthy = not healthy
+  return jsonify(health_value=healthy)
 
 @routes_blueprint.route('/healthz')
 def healthz():
-  if health_status:
+  if healthy:
     resp = jsonify(health="1")
     resp.status_code = 200
   else:

@@ -1,0 +1,26 @@
+    try:
+      db.init_app(app)
+      db.create_all()
+    except Exception as e:
+      status['Connected'] = False
+      print(e)
+      pass
+    else:
+      status['Connected'] = True
+      pass
+
+
+    SECRET_KEY = os.urandom(24)
+SQLALCHEMY_DATABASE_URI = f'{db_uri}'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug',"connect_args": {'sslmode':"disable"}}
+
+
+@routes_blueprint.route('/database')
+def database():
+  if db.status['Connected'] == True:
+    db.add_request(datetime.datetime.now(),request.remote_addr)
+    data = db.get_requests()
+    return render_template("database.html",template_db_status = db.status,template_db_data = data)
+  else:
+    return render_template("database.html",template_db_status = db.status)

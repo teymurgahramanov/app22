@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-status = {'Connected': True, 'Writable': False}
 
 class Requests(db.Model):
   __tablename__ = "Requests"

@@ -1,7 +1,6 @@
 import os
 import socket
 import datetime
-import app.database as db
 import app.todo as todo
 from flask import Blueprint, jsonify, request
 
@@ -25,17 +24,8 @@ def headers():
     data[k] = v
   return jsonify({"data" : data})
 
-@routes_blueprint.route('/database')
-def database():
-  if db.status['Connected'] == True:
-    db.add_request(datetime.datetime.now(),request.remote_addr)
-    data = db.get_requests()
-    return render_template("database.html",template_db_status = db.status,template_db_data = data)
-  else:
-    return render_template("database.html",template_db_status = db.status)
-
 @routes_blueprint.route('/healthz/toggle')
-def toggle():
+def healthz_toggle():
   global healthy
   healthy = not healthy
   return jsonify(healthy=healthy)

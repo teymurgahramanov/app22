@@ -1,0 +1,14 @@
+database:
+  engine:
+  name:
+  host:
+  port:
+  username:
+  password:
+
+app:
+  listen_address:
+  listen_port: 
+  sqlalchemy_track_modifications: false
+  sqlalchemy_engine_options: ""
+  sqlalchemy_echo: true

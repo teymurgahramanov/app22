@@ -1,4 +1,3 @@
-from config import *
 from app import create_app
 
 app22 = create_app()

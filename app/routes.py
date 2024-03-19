@@ -31,7 +31,6 @@ def healthz_toggle():
   healthy = not healthy
   return jsonify(healthy=healthy)
 
-healthy = True
 @routes_blueprint.route('/healthz')
 def healthz():
   if healthy:

@@ -1,20 +1,16 @@
-import os
-import yaml
-from config import *
 from flask import Flask
+from config import Config
+from app.database import db
 from prometheus_flask_exporter import PrometheusMetrics
 
 def create_app() :
   app = Flask(__name__, instance_relative_config=True)
-
-  SECRET_KEY = os.urandom(24)
-  SQLALCHEMY_DATABASE_URI = f'{db_uri}'
-  SQLALCHEMY_TRACK_MODIFICATIONS = False
-  SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug',"connect_args": {'sslmode':"disable"}}
-  SQLALCHEMY_ECHO = True
-  db.init_app(app)
+  app.config.from_object(Config)
+  app.config.from_prefixed_env(prefix='APP22_')
 
   with app.app_context():
+    db.init_app(app)
+    db.create_all()
     PrometheusMetrics(app)
     from . import routes
     app.register_blueprint(routes.routes_blueprint)

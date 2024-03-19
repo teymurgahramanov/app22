@@ -2,10 +2,10 @@ import os
 import socket
 import datetime
 import app.todo as todo
+import app.database as database
 from flask import Blueprint, jsonify, request
 
 routes_blueprint = Blueprint('routes',__name__)
-healthy = True
 
 @routes_blueprint.route('/system')
 def system():
@@ -15,15 +15,16 @@ def system():
     data["env"][k] = v
   data["sys"]["hostname"] = socket.gethostname()
   data["sys"]["client"] = request.remote_addr
-  return jsonify({"data" : data})
+  return jsonify(data)
 
 @routes_blueprint.route('/headers')
 def headers():
   data = {}
   for k,v in request.headers:
     data[k] = v
-  return jsonify({"data" : data})
+  return jsonify(data)
 
+healthy = True
 @routes_blueprint.route('/healthz/toggle')
 def healthz_toggle():
   global healthy
@@ -39,6 +40,16 @@ def healthz():
     resp = jsonify(health="0")
     resp.status_code = 500
   return resp
+
+@routes_blueprint.route('/database')
+def add_request():
+  record = database.Requests(datetime.datetime.now(),request.remote_addr)
+  database.db.session.add(record)
+  database.db.session.commit()
+  records = database.Requests.query.with_entities(database.Requests.id,database.Requests.time,database.Requests.client).order_by(database.Requests.id.desc()).limit(5).all()
+  database.db.session.close()
+  print(records)
+  return jsonify("ok")
 
 @routes_blueprint.route('/tasks',methods=['GET','POST'])
 def tasks():

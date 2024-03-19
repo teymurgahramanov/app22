@@ -31,6 +31,7 @@ def healthz_toggle():
   healthy = not healthy
   return jsonify(healthy=healthy)
 
+healthy = True
 @routes_blueprint.route('/healthz')
 def healthz():
   if healthy:
@@ -43,13 +44,13 @@ def healthz():
 
 @routes_blueprint.route('/database')
 def add_request():
+  limit = request.args.get('limit', default = 5, type = int)
   record = database.Requests(datetime.datetime.now(),request.remote_addr)
   database.db.session.add(record)
   database.db.session.commit()
-  records = database.Requests.query.with_entities(database.Requests.id,database.Requests.time,database.Requests.client).order_by(database.Requests.id.desc()).limit(5).all()
+  records = database.Requests.query.with_entities(database.Requests.id,database.Requests.time,database.Requests.client).order_by(database.Requests.id.desc()).limit(limit).all()
   database.db.session.close()
-  print(records)
-  return jsonify("ok")
+  return jsonify([dict(r) for r in records])
 
 @routes_blueprint.route('/tasks',methods=['GET','POST'])
 def tasks():

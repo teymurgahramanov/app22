@@ -1,14 +1,15 @@
 # App22
-_Most useful dummy Web application and API for your lab._
+_Most useful lab application to perform multipurpose test in container environment!_
 
 ![](docs/demo.gif)
 
-### With App22 you can easily test: ###
-- Request headers
-- Database failover and replication
-- API Gateway and Load Balancer
-- Environment variables
-- Prometheus scraping
+### With App22 you can test: ###
+- Request headers /headers
+- Kubernetes probes /healthz
+- Database failover and replication /database
+- Container runtime (system information, environment variables) /system
+- Prometheus scraping /metrics
+- Frontend backennd API gateway
 
 ## Usage
 ### Docker

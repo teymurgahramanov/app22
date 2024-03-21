@@ -1,7 +1,6 @@
 import os
 import socket
 import datetime
-import psutil
 import app.todo as todo
 import app.database as database
 from flask import Blueprint, jsonify, request
@@ -10,12 +9,11 @@ routes_blueprint = Blueprint('routes',__name__)
 
 @routes_blueprint.route('/system')
 def system():
-  data = {"env":{},"sys":{}}
+  data = {"sys":{},"env":{}}
   envVars = [ (k,v) for k,v in os.environ.items()]
   for k,v in envVars:
     data["env"][k] = v
   data["sys"]["hostname"] = socket.gethostname()
-  data["sys"]["client"] = request.remote_addr
   return jsonify(data)
 
 @routes_blueprint.route('/headers')
@@ -50,7 +48,8 @@ def add_request():
   database.db.session.commit()
   records = database.Requests.query.with_entities(database.Requests.id,database.Requests.time,database.Requests.client).order_by(database.Requests.id.desc()).limit(limit).all()
   database.db.session.close()
-  return jsonify([dict(r) for r in records])
+  data = [dict(r) for r in records]
+  return jsonify(data)
 
 @routes_blueprint.route('/tasks',methods=['GET','POST'])
 def tasks():

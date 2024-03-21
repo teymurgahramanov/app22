@@ -11,3 +11,14 @@ class Requests(db.Model):
   def __init__(self,time,client):
     self.time = time
     self.client = client
+
+def select(limit):
+  records = Requests.query.with_entities(Requests.id,Requests.time,Requests.client).order_by(Requests.id.desc()).limit(limit).all()
+  db.session.close()
+  return [dict(r) for r in records]
+
+def insert(time,client):
+  record = Requests(time,client)
+  db.session.add(record)
+  db.session.commit()
+  db.session.close()

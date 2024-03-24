@@ -42,16 +42,18 @@ def healthz():
 
 @routes_blueprint.route('/database')
 def add_request():
-  data = {'db': str(database.db.engine.url), 'connected': 'true', 'writable': 'true', 'data': []}
+  data = {'db': str(database.db.engine.url), 'connected': True, 'writable': False, 'data': []}
   limit = request.args.get('limit', default = 5, type = int)
   try:
     database.insert(datetime.datetime.now(),request.remote_addr)
-  except:
-    data['writable'] = 'false'
+  except Exception as e:
+    print(e)
+    data['writable'] = False
   try:
     data['data'] = database.select(limit)
-  except:
-    data['connected'] = 'false'
+  except Exception as e:
+    print(e)
+    data['connected'] = True
   return jsonify(data)
 
 @routes_blueprint.route('/tasks',methods=['GET','POST'])

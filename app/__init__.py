@@ -9,8 +9,11 @@ def create_app() :
   app.config.from_prefixed_env(prefix='APP22_')
 
   with app.app_context():
-    db.init_app(app)
-    db.create_all()
+    try:
+      db.init_app(app)
+      db.create_all()
+    except Exception as e:
+      print(e)
     PrometheusMetrics(app)
     from . import routes
     app.register_blueprint(routes.routes_blueprint)

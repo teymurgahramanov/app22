@@ -50,6 +50,8 @@ def add_request():
     print(e)
     data['writable'] = False
     data['exception'] = str(e)
+    database.db.session.rollback()
+    pass
   else:
     data['db'] = str(database.db.engine.url)
   try:
@@ -58,6 +60,11 @@ def add_request():
     print(e)
     data['connected'] = False
     data['exception'] = str(e)
+    database.db.session.rollback()
+    pass
+  else:
+    data['db'] = str(database.db.engine.url)
+  database.db.session.close()
   return jsonify(data)
 
 @routes_blueprint.route('/tasks',methods=['GET','POST'])

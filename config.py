@@ -1,7 +1,7 @@
 from os import urandom
 
 class Config():
-  DEBUG = False
+  DEBUG = True
   SECRET_KEY = urandom(24)
   SQLALCHEMY_ECHO = False
   SQLALCHEMY_DATABASE_URI = 'sqlite:///app22.db'

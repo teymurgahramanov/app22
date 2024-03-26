@@ -2,14 +2,14 @@
 _The most useful multipurpose lab Application to perform tests in Kubernetes!_
 
 ## Features ###
-With App22 you can test the following:
+With App22 you can do the following:
 
-- Request headers behind reverse proxy `/headers`
-- Kubernetes probes `/healthz`
-- Database failover and replication `/database`
-- Container runtime (system information, environment variables, etc.) `/system`
-- Prometheus scraping and alerts `/metrics`
-- API Gateway configuration or your self-written frontend with To-Do List API `/tasks`
+- Look at request headers behind reverse proxy `/headers`
+- Look at container system information, environment variables, etc. `/system`
+- Experiment with Kubernetes probes `/healthz`
+- Test SQL database failover and replication in real time without reconnect `/database`
+- Test Prometheus scraping and alerts `/metrics`
+- Test API Gateway configuration or your self-written frontend with To-Do List API `/tasks`
 
 ## Endpoints
 
@@ -28,9 +28,13 @@ Simple To-Do List API.
   "required": ["title"]
 }
 ```
-#### List
+#### List all tasks
 ```
 curl http://localhost:5000/tasks
+```
+#### Get task
+```
+curl http://localhost:5000/tasks/<id>
 ```
 #### Create
 ```

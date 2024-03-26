@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Migrate to FastAPI
+
 ## [v1.0.0] - 2024-03-25
 
 ### Added

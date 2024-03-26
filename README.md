@@ -59,7 +59,7 @@ $ docker run --name app22 -p 5000:5000 teymurgahramanov/app22:latest
 ```
 
 ## Configuration
-Default configuration file [config.py](./config.py) can be overwritten using environment variables:
+Default configuration [config.py](./config.py) can be overwritten using environment variables:
 - __APP22_DEBUG__\
   Enable debug mode using `1`. Disabled by default.
 - __APP22_DB_URI__\

@@ -32,7 +32,7 @@ Simple To-Do List API.
 ```
 curl http://localhost:5000/tasks
 ```
-#### Get task
+#### Get task by ID
 ```
 curl http://localhost:5000/tasks/<id>
 ```
@@ -59,6 +59,10 @@ $ docker run --name app22 -p 5000:5000 teymurgahramanov/app22:latest
 ```
 
 ## Configuration
-Default configuration file [config.py](./config.py) can be overwritten by mounting ```/app/config.py``` or using environment variables with prefix `APP22_`.
-
-# https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/
+Default configuration file [config.py](./config.py) can be overwritten using environment variables:
+- __APP22_DEBUG__\
+  Enable debug mode using `1`. Disabled by default.
+- __APP22_DB_URI__\
+  Set connection string. Default is the SQLite db file inside of container. Example: `postgresql://app22:app22@localhost:5432/app22`. Refer to https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.create_engine.
+- __APP22_DB_ARGS__\
+  A dict of arguments to pass to db engine. Refer to https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.create_engine.

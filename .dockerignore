@@ -1,5 +1,6 @@
 .venv/
 docs/
+app/app22.db
 __pycache__
 **/.__pycache__
 **/.dockerignore

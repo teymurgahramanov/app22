@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Migrate to FastAPI
+- Switch to FastAPI
+- Reduce image size
 
 ## [v1.0.0] - 2024-03-25
 

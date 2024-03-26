@@ -60,3 +60,5 @@ $ docker run --name app22 -p 5000:5000 teymurgahramanov/app22:latest
 
 ## Configuration
 Default configuration file [config.py](./config.py) can be overwritten by mounting ```/app/config.py``` or using environment variables with prefix `APP22_`.
+
+# https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/

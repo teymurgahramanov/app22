@@ -6,7 +6,6 @@ from prometheus_flask_exporter import PrometheusMetrics
 def create_app() :
   app = Flask(__name__, instance_relative_config=True)
   app.config.from_object(Config)
-  app.config.from_prefixed_env(prefix='APP22_')
 
   with app.app_context():
     try:

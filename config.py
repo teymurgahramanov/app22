@@ -1,11 +1,13 @@
-from os import urandom
+import os
 
 class Config():
-  DEBUG = False
-  SECRET_KEY = urandom(24)
-  SQLALCHEMY_ECHO = False
-  SQLALCHEMY_DATABASE_URI = 'sqlite:///app22.db'
-  SQLALCHEMY_ENGINE_OPTIONS = {}
+  SECRET_KEY = os.urandom(24)
+  if APP22_DEBUG == 1:
+    DEBUG = True
+    SQLALCHEMY_ECHO = True
+  else:
+    DEBUG = False
+    SQLALCHEMY_ECHO = False 
+  SQLALCHEMY_DATABASE_URI = os.environ.get('APP22_DB_URI') or 'sqlite:///app22.db'
+  SQLALCHEMY_ENGINE_OPTIONS = os.environ.get('APP22_DB_OPTIONS') or {}
   SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-# https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/

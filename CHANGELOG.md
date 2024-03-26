@@ -16,6 +16,7 @@
 
 ### Changed
 
+- Configuration env variables names
 - /api/tasks -> /tasks
 - Refactored
 

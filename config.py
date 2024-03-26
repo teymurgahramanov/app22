@@ -1,21 +1,13 @@
 import os
 
 class Config():
-  app_listen_address = os.environ.get('APP_LISTEN_ADDRESS') or '0.0.0.0'
-  app_listen_port = os.environ.get('APP_LISTEN_PORT') or '5000'
-  
-  db_engine = os.environ.get('DB_ENGINE') or 'mysql'
-  db_endpoint = os.environ.get('DB_ENDPOINT') or 'localhost:3306'
-  db_name = os.environ.get('DB_NAME') or 'app22'
-  db_username = os.environ.get('DB_USERNAME') or 'app22'
-  db_password = os.environ.get('DB_PASSWORD') or 'app22'
-  db_uri = f'{db_engine}://{db_username}:{db_password}@{db_endpoint}/{db_name}'
-
   SECRET_KEY = os.urandom(24)
-  SQLALCHEMY_DATABASE_URI = f'{db_uri}'
+  if os.environ.get('APP22_DEBUG'):
+    DEBUG = True
+    SQLALCHEMY_ECHO = True
+  else:
+    DEBUG = False
+    SQLALCHEMY_ECHO = False 
+  SQLALCHEMY_DATABASE_URI = os.environ.get('APP22_DB_URI') or 'sqlite:///app22.db'
+  SQLALCHEMY_ENGINE_OPTIONS = os.environ.get('APP22_DB_ARGS') or {}
   SQLALCHEMY_TRACK_MODIFICATIONS = False
-  SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug',"connect_args": {'sslmode':"disable"}}
-
-class devConfig(Config):
-  SQLALCHEMY_ECHO = True
-  SQLALCHEMY_ENGINE_OPTIONS = {'echo_pool':'debug',"connect_args": {'sslmode':"disable"}}

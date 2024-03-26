@@ -2,14 +2,7 @@ from flask import request
 from flask_expects_json import expects_json
 import uuid
 
-tasks = {
-  "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx": {
-    "title":"Check this task",
-    "description":"No more procrastination",
-    "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-    "done":True 
-  }
-}
+tasks = {}
 
 schema = {
   "type": "object",
@@ -22,7 +15,7 @@ schema = {
 }
 
 def task_not_found(task_id):
-  return {'error': 'Task with ID ' + str(task_id) + ' Not Found'},404
+  return {'error': 'Task with ID ' + str(task_id) + ' not found'},404
 
 def deleted():
   return {'result':'deleted'},200

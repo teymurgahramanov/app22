@@ -1,49 +1,80 @@
 import os
 import socket
 import datetime
-import app.database as db
 import app.todo as todo
-from flask import Blueprint, jsonify, render_template, request
+import app.database as database
+from flask import Blueprint, jsonify, request
 
 routes_blueprint = Blueprint('routes',__name__)
-health_status = True
 
-@routes_blueprint.route('/')
-def home():
-  return render_template("home.html")
+@routes_blueprint.route('/system')
+def system():
+  data = {"sys":{},"env":{}}
+  envVars = [ (k,v) for k,v in os.environ.items()]
+  for k,v in envVars:
+    data["env"][k] = v
+  data["sys"]["hostname"] = socket.gethostname()
+  return jsonify(data)
 
 @routes_blueprint.route('/headers')
 def headers():
-  return render_template("headers.html",template_request = request)
+  data = {}
+  for k,v in request.headers:
+    data[k] = v
+  return jsonify(data)
 
-@routes_blueprint.route('/healthz_toggle')
-def toggle():
-  global health_status
-  health_status = not health_status
-  return jsonify(health_value=health_status)
+healthy = True
+@routes_blueprint.route('/healthz/toggle')
+def healthz_toggle():
+  global healthy
+  healthy = not healthy
+  return jsonify(healthy=healthy)
 
 @routes_blueprint.route('/healthz')
 def healthz():
-  if health_status:
-    resp = jsonify(health="healthy")
+  if healthy:
+    resp = jsonify(health="1")
     resp.status_code = 200
   else:
-    resp = jsonify(health="unhealthy")
+    resp = jsonify(health="0")
     resp.status_code = 500
   return resp
 
-@routes_blueprint.route('/api')
-def api():
-  return render_template("api.html",template_base_url=request.base_url)
+@routes_blueprint.route('/database')
+def add_request():
+  data = {'db': '', 'connected': True, 'writable': True, 'data': []}
+  limit = request.args.get('limit', default = 5, type = int)
+  try:
+    database.insert(datetime.datetime.now(),request.remote_addr)
+  except Exception as e:
+    print(e)
+    data['writable'] = False
+    data['exception'] = str(e)
+    database.db.session.rollback()
+    pass
+  else:
+    data['db'] = str(database.db.engine.url)
+  try:
+    data['data'] = database.select(limit)
+  except Exception as e:
+    print(e)
+    data['connected'] = False
+    data['exception'] = str(e)
+    database.db.session.rollback()
+    pass
+  else:
+    data['db'] = str(database.db.engine.url)
+  database.db.session.close()
+  return jsonify(data)
 
-@routes_blueprint.route('/api/tasks',methods=['GET','POST'])
+@routes_blueprint.route('/tasks',methods=['GET','POST'])
 def tasks():
   if request.method == 'GET':
     return todo.get_tasks()
   if request.method == 'POST':
     return todo.add_task()
 
-@routes_blueprint.route('/api/tasks/<task_id>',methods=['GET','PUT','DELETE'])
+@routes_blueprint.route('/tasks/<task_id>',methods=['GET','PUT','DELETE'])
 def get_task(task_id):
   if request.method == 'GET':
     return todo.get_task(task_id)
@@ -51,16 +82,3 @@ def get_task(task_id):
     return todo.update_task(task_id)
   if request.method == 'DELETE':
     return todo.remove_task(task_id)
-
-@routes_blueprint.route('/database')
-def database():
-  if db.status['Connected'] == True:
-    db.add_request(datetime.datetime.now(),request.remote_addr)
-    data = db.get_requests()
-    return render_template("database.html",template_db_status = db.status,template_db_data = data)
-  else:
-    return render_template("database.html",template_db_status = db.status)
-
-@routes_blueprint.route('/system')
-def system():
-  return render_template("system.html",template_envvars=os.environ.items(),template_hostname = socket.gethostname(),template_client = request.remote_addr)

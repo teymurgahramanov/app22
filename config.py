@@ -1,10 +1,10 @@
 from os import urandom
 
 class Config():
-  DEBUG = True
+  DEBUG = False
   SECRET_KEY = urandom(24)
   SQLALCHEMY_ECHO = False
-  SQLALCHEMY_DATABASE_URI = 'postgresql://app22:app22@localhost:5432/app22'
+  SQLALCHEMY_DATABASE_URI = 'sqlite:///app22.db'
   SQLALCHEMY_ENGINE_OPTIONS = {}
   SQLALCHEMY_TRACK_MODIFICATIONS = False
 

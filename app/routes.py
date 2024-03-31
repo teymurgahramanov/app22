@@ -34,6 +34,10 @@ def response():
   time.sleep(timeout)
   return jsonify(data),code
 
+@routes_blueprint.route('/exit/<code>')
+def exit(code):
+  return os._exit(int(code))
+
 healthy = True
 @routes_blueprint.route('/healthz/toggle')
 def healthz_toggle():

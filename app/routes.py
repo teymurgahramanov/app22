@@ -1,4 +1,5 @@
 import os
+import sys
 import socket
 import time
 import datetime
@@ -34,9 +35,9 @@ def response():
   time.sleep(timeout)
   return jsonify(data),code
 
-@routes_blueprint.route('/exit/<code>')
+@routes_blueprint.route('/exit/<int:code>')
 def exit(code):
-  return os._exit(int(code))
+  os._exit(code)
 
 healthy = True
 @routes_blueprint.route('/healthz/toggle')

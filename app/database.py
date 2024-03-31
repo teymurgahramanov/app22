@@ -12,13 +12,17 @@ class Requests(db.Model):
     self.time = time
     self.source = source
 
-def select(limit):
-  records = Requests.query.with_entities(Requests.id,Requests.time,Requests.source).order_by(Requests.id.desc()).limit(limit).all()
-  db.session.close()
-  return [dict(r) for r in records]
+class Tasks(db.Model):
+  __tablename__ = "Tasks"
+  id = db.Column(db.String, primary_key = True)
+  title = db.Column(db.String(48))
+  description = db.Column(db.String(254))
+  done = db.Column(db.Boolean, default=False)
+  updated_at = db.Column(db.DateTime) 
 
-def insert(time,source):
-  record = Requests(time,source)
-  db.session.add(record)
-  db.session.commit()
-  db.session.close()
+  def __init__(self,id,title,description,done,updated_at):
+    self.id = id
+    self.title = title
+    self.description = description
+    self.done = done
+    self.updated_at = updated_at

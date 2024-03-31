@@ -1,6 +1,8 @@
 from flask import request
 from flask_expects_json import expects_json
+import app.database as database
 import uuid
+import datetime
 
 tasks = {}
 
@@ -14,51 +16,47 @@ schema = {
   "required": ["title"]
 }
 
-def task_not_found(task_id):
-  return {'error': 'Task with ID ' + str(task_id) + ' not found'},404
-
-def deleted():
-  return {'result':'deleted'},200
-
-def get_tasks():
-  return {'tasks': tasks},200
+def get_tasks(limit):
+  tasks = database.Tasks.query.with_entities(database.Tasks.id,database.Tasks.title,database.Tasks.description,database.Tasks.done).order_by(database.Tasks.updated_at).limit(limit).all()
+  database.db.session.close()
+  return tasks
 
 def get_task(task_id):
-  try:
-    tasks[task_id]
-  except:
-    return task_not_found(task_id)
-  else:
-    return {'task': tasks[task_id]}, 200
+  task = database.Tasks.query.filter_by(id=task_id).first()
+  return task
 
 @expects_json(schema)
 def add_task():
   task_id = str(uuid.uuid4())
-  task = {
-    'id': task_id,
-    'title': request.json['title'],
-    'description': request.json.get('description',''),
-    'done': False
-  }
-  tasks[task_id] = task
-  return {'task': tasks[task_id]}, 201
+  task = database.Tasks(task_id,request.json['title'],request.json.get('description',''),False,datetime.datetime.now())
+  database.db.session.add(task)
+  database.db.session.commit()
+  task = get_task(task_id)
+  database.db.session.close()
+  return task
 
 @expects_json(schema)
 def update_task(task_id):
-  try:
-    tasks[task_id]
-  except:
-    return task_not_found(task_id)
+  task = get_task(task_id)
+  if task is None:
+    database.db.session.close()
+    return None
   else:
-    for key in request.json:
-      tasks[task_id][key] = request.json[key]
-    return {'task': tasks[task_id]}, 200
+    for k in request.json:
+      setattr(task, k, request.json[k])
+    task.updated_at = datetime.datetime.now()
+    database.db.session.commit()
+    task = get_task(task_id)
+    database.db.session.close()
+  return task
 
 def remove_task(task_id):
-  try:
-    tasks[task_id]
-  except:
-    return task_not_found(task_id)
+  task = get_task(task_id)
+  if task is None:
+    database.db.session.close()
+    return None
   else:
-    tasks.pop(task_id)
-    return deleted()
+    database.db.session.delete(task)
+    database.db.session.commit()
+    database.db.session.close()
+    return True

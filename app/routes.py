@@ -1,5 +1,6 @@
 import os
 import socket
+import time
 import datetime
 import app.todo as todo
 import app.database as database
@@ -9,11 +10,11 @@ routes_blueprint = Blueprint('routes',__name__)
 
 @routes_blueprint.route('/system')
 def system():
-  data = {"sys":{},"env":{}}
+  data = {"info":{},"env":{}}
   envVars = [ (k,v) for k,v in os.environ.items()]
   for k,v in envVars:
     data["env"][k] = v
-  data["sys"]["hostname"] = socket.gethostname()
+  data["info"]["hostname"] = socket.gethostname()
   return jsonify(data)
 
 @routes_blueprint.route('/headers')
@@ -22,6 +23,16 @@ def headers():
   for k,v in request.headers:
     data[k] = v
   return jsonify(data)
+
+@routes_blueprint.route('/response')
+def response():
+  data = {}
+  code = request.args.get('code', default = 200, type = int)
+  timeout = request.args.get('timeout', default = 1, type = int)
+  data['code'] = code
+  data['timeout'] = timeout
+  time.sleep(timeout)
+  return jsonify(data),code
 
 healthy = True
 @routes_blueprint.route('/healthz/toggle')
@@ -45,7 +56,9 @@ def add_request():
   data = {'db': '', 'connected': True, 'writable': True, 'data': []}
   limit = request.args.get('limit', default = 5, type = int)
   try:
-    database.insert(datetime.datetime.now(),request.remote_addr)
+    record = database.Requests(datetime.datetime.now(),request.remote_addr)
+    database.db.session.add(record)
+    database.db.session.commit()
   except Exception as e:
     print(e)
     data['writable'] = False
@@ -55,7 +68,8 @@ def add_request():
   else:
     data['db'] = str(database.db.engine.url)
   try:
-    data['data'] = database.select(limit)
+    records = database.Requests.query.with_entities(database.Requests.id,database.Requests.time,database.Requests.source).order_by(database.Requests.id.desc()).limit(limit).all()
+    data['data'] = [dict(r) for r in records]
   except Exception as e:
     print(e)
     data['connected'] = False
@@ -67,18 +81,34 @@ def add_request():
   database.db.session.close()
   return jsonify(data)
 
+def handle_task(data):
+  if data is None:
+    return jsonify('Not found'),404
+  if type(data) == bool:
+    return jsonify(data)
+  else:
+    data_dict = data.__dict__
+    data_dict.pop('_sa_instance_state', None)
+    return jsonify(data_dict)
+
 @routes_blueprint.route('/tasks',methods=['GET','POST'])
 def tasks():
   if request.method == 'GET':
-    return todo.get_tasks()
+    limit = request.args.get('limit', default = 10, type = int)
+    data = todo.get_tasks(limit)
+    return jsonify([dict(i) for i in data]),200
   if request.method == 'POST':
-    return todo.add_task()
+    data = todo.add_task()
+    return (handle_task(data)),201
 
 @routes_blueprint.route('/tasks/<task_id>',methods=['GET','PUT','DELETE'])
-def get_task(task_id):
+def task(task_id):
   if request.method == 'GET':
-    return todo.get_task(task_id)
+    data = todo.get_task(task_id)
+    return (handle_task(data))
   if request.method == 'PUT':
-    return todo.update_task(task_id)
+    data = todo.update_task(task_id)
+    return (handle_task(data))
   if request.method == 'DELETE':
-    return todo.remove_task(task_id)
+    data = todo.remove_task(task_id)
+    return (handle_task(data))

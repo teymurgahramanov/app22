@@ -44,7 +44,8 @@ def exception():
   raise Exception()
 
 @routes_blueprint.route('/cat')
-def exception():
+def cat():
+  # List file contents file and file hash under /data
   raise Exception()
 
 healthy = True

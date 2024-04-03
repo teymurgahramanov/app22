@@ -4,7 +4,7 @@ import socket
 import time
 import datetime
 import app.todo as todo
-import app.database as database
+import app.models as models
 from flask import Blueprint, jsonify, request
 
 routes_blueprint = Blueprint('routes',__name__)
@@ -70,26 +70,26 @@ def add_request():
   data = {'db': '', 'connected': True, 'writable': True, 'data': []}
   limit = request.args.get('limit', default = 5, type = int)
   try:
-    record = database.Requests(datetime.datetime.now(),request.remote_addr)
-    database.db.session.add(record)
-    database.db.session.commit()
+    record = models.Requests(datetime.datetime.now(),request.remote_addr)
+    models.db.session.add(record)
+    models.db.session.commit()
   except Exception as e:
     print(e)
     data['writable'] = False
     data['exception'] = str(e)
-    database.db.session.rollback()
+    models.db.session.rollback()
     pass
   try:
-    records = database.Requests.query.with_entities(database.Requests.id,database.Requests.time,database.Requests.source).order_by(database.Requests.id.desc()).limit(limit).all()
+    records = models.Requests.query.with_entities(models.Requests.id,models.Requests.time,models.Requests.source).order_by(models.Requests.id.desc()).limit(limit).all()
   except Exception as e:
     print(e)
     data['connected'] = False
     data['exception'] = str(e)
     pass
   else:
-    data['db'] = str(database.db.engine.url)
+    data['db'] = str(models.db.engine.url)
     data['data'] = [dict(r) for r in records]
-  database.db.session.close()
+  models.db.session.close()
   return jsonify(data)
 
 def handle_task(data):

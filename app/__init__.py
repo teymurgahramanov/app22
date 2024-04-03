@@ -1,6 +1,6 @@
 from flask import Flask
 from config import Config
-from app.database import db
+from app.models import db
 from prometheus_flask_exporter import PrometheusMetrics
 
 def create_app() :

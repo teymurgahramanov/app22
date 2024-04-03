@@ -43,6 +43,10 @@ def exit(code):
 def exception():
   raise Exception()
 
+@routes_blueprint.route('/cat')
+def exception():
+  raise Exception()
+
 healthy = True
 @routes_blueprint.route('/healthz/toggle')
 def healthz_toggle():

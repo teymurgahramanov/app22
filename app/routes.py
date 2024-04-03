@@ -28,16 +28,20 @@ def headers():
 @routes_blueprint.route('/response')
 def response():
   data = {}
-  code = request.args.get('code', default = 200, type = int)
-  timeout = request.args.get('timeout', default = 1, type = int)
-  data['code'] = code
-  data['timeout'] = timeout
-  time.sleep(timeout)
-  return jsonify(data),code
+  status = request.args.get('status', default = 200, type = int)
+  delay = request.args.get('delay', default = 0, type = int)
+  data['status'] = status
+  data['delay'] = delay
+  time.sleep(delay)
+  return jsonify(data),status
 
 @routes_blueprint.route('/exit/<int:code>')
 def exit(code):
   os._exit(code)
+
+@routes_blueprint.route('/exception')
+def exception():
+  raise Exception()
 
 healthy = True
 @routes_blueprint.route('/healthz/toggle')
@@ -70,19 +74,16 @@ def add_request():
     data['exception'] = str(e)
     database.db.session.rollback()
     pass
-  else:
-    data['db'] = str(database.db.engine.url)
   try:
     records = database.Requests.query.with_entities(database.Requests.id,database.Requests.time,database.Requests.source).order_by(database.Requests.id.desc()).limit(limit).all()
-    data['data'] = [dict(r) for r in records]
   except Exception as e:
     print(e)
     data['connected'] = False
     data['exception'] = str(e)
-    database.db.session.rollback()
     pass
   else:
     data['db'] = str(database.db.engine.url)
+    data['data'] = [dict(r) for r in records]
   database.db.session.close()
   return jsonify(data)
 

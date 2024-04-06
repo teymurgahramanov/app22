@@ -2,7 +2,9 @@ import os
 import sys
 import socket
 import time
+import glob
 import datetime
+import hashlib
 import app.todo as todo
 import app.models as models
 from flask import Blueprint, jsonify, request
@@ -45,8 +47,21 @@ def exception():
 
 @routes_blueprint.route('/cat')
 def cat():
-  # List file contents file and file hash under /data
-  raise Exception()
+  data = {}
+  files = glob.glob("data/*")
+  for file in files:
+    with open(file, 'rb') as f:
+      content = f.read()
+      checksum = hashlib.md5(content).hexdigest()
+      filename = os.path.basename(file)
+      data[filename] = {}
+      data[filename]['checksum'] = checksum
+      data[filename]['content'] = content.decode("utf-8")
+  return jsonify(data)
+
+@routes_blueprint.route('/time')
+def time():
+  return jsonify(datetime.datetime.now())
 
 healthy = True
 @routes_blueprint.route('/healthz/toggle')

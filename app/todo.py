@@ -17,7 +17,7 @@ schema = {
 }
 
 def get_tasks(limit):
-  tasks = models.Tasks.query.with_entities(models.Tasks.id,models.Tasks.title,models.Tasks.description,models.Tasks.done).order_by(models.Tasks.updated_at).limit(limit).all()
+  tasks = models.Tasks.query.order_by(models.Tasks.updated_at.desc()).limit(limit).all()
   models.db.session.close()
   return tasks
 

@@ -5,6 +5,11 @@
 - Switch to FastAPI
 - Reduce image size
 
+## [v1.0.1] - 2024-04-07
+
+### Added
+- New endpoints `/log,`
+
 ## [v1.0.0] - 2024-03-25
 
 ### Added

@@ -5,10 +5,13 @@ import time
 import glob
 import datetime
 import hashlib
+import logging
 import app.todo as todo
 import app.models as models
+from config import Config
 from flask import Blueprint, jsonify, request
 
+logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',stream=sys.stdout, level=logging.INFO, datefmt='%Y/%m/%d %H:%M:%S')
 routes_blueprint = Blueprint('routes',__name__)
 
 @routes_blueprint.route('/system')
@@ -45,6 +48,15 @@ def exit(code):
 def exception():
   raise Exception()
 
+@routes_blueprint.route('/log')
+def log():
+  message = request.args.get('message', None)
+  logging.debug(message)
+  logging.info(message)
+  logging.warning(message)
+  logging.error(message)
+  return jsonify(True),200
+
 @routes_blueprint.route('/cat')
 def cat():
   data = {}
@@ -59,8 +71,8 @@ def cat():
       data[filename]['content'] = content.decode("utf-8")
   return jsonify(data)
 
-@routes_blueprint.route('/time')
-def time():
+@routes_blueprint.route('/timedate')
+def timedate():
   return jsonify(datetime.datetime.now())
 
 healthy = True
@@ -119,10 +131,15 @@ def handle_task(data):
 
 @routes_blueprint.route('/tasks',methods=['GET','POST'])
 def tasks():
+  tasks_dicts = []
   if request.method == 'GET':
     limit = request.args.get('limit', default = 10, type = int)
-    data = todo.get_tasks(limit)
-    return jsonify([dict(i) for i in data]),200
+    tasks = todo.get_tasks(limit)
+    for task in tasks:
+      task_dict = task.__dict__.copy()
+      task_dict.pop('_sa_instance_state', None)
+      tasks_dicts.append(task_dict)
+    return jsonify(tasks_dicts),200
   if request.method == 'POST':
     data = todo.add_task()
     return (handle_task(data)),201

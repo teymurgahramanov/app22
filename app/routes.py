@@ -107,7 +107,7 @@ def add_request():
     models.db.session.rollback()
     pass
   try:
-    records = models.Requests.query.with_entities(models.Requests.id,models.Requests.time,models.Requests.source).order_by(models.Requests.id.desc()).limit(limit).all()
+    records = models.Requests.query.order_by(models.Requests.id.desc()).limit(limit).all()
   except Exception as e:
     print(e)
     data['connected'] = False
@@ -115,7 +115,10 @@ def add_request():
     pass
   else:
     data['db'] = str(models.db.engine.url)
-    data['data'] = [dict(r) for r in records]
+    for record in records:
+      record_dict = record.__dict__.copy()
+      record_dict.pop('_sa_instance_state', None)
+      data['data'].append(record_dict)
   models.db.session.close()
   return jsonify(data)
 
@@ -131,10 +134,10 @@ def handle_task(data):
 
 @routes_blueprint.route('/tasks',methods=['GET','POST'])
 def tasks():
-  tasks_dicts = []
   if request.method == 'GET':
     limit = request.args.get('limit', default = 10, type = int)
     tasks = todo.get_tasks(limit)
+    tasks_dicts = []
     for task in tasks:
       task_dict = task.__dict__.copy()
       task_dict.pop('_sa_instance_state', None)

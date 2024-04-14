@@ -1,7 +1,7 @@
 from os import environ
 
 class Config():
-  VERSION = 'v1.0.1'
+  VERSION = environ.get('APP22_VERSION')
   SECRET_KEY = environ.get('APP22_SECRET_KEY') or 'app22'
   if environ.get('APP22_DEBUG') is True:
     DEBUG = True

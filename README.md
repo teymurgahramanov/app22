@@ -15,7 +15,7 @@ With App22 you can do the following:
 - Test Prometheus scraping and alerts.
 - Test Load Balancer, API Gateway, and Service Mesh.
 
-... and much more.
+... and much more. Take a look at the documentation on `/doc`.
 
 ## Run
 ### Docker

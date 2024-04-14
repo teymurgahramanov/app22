@@ -20,7 +20,7 @@ With App22 you can do the following:
 ## Run
 ### Docker
 ```
-$ docker run --name app22 -p 5000:5000 teymurgahramanov/app22:latest
+$ docker run --rm --name app22 -p 5000:5000 teymurgahramanov/app22:latest
 ```
 
 ## Configuration

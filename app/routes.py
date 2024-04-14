@@ -168,7 +168,7 @@ def response():
 @routes_blueprint.route('/cat')
 def cat():
   """
-  Get contents and checksums of files in the /app/data directory.
+  Get contents and checksums of files mounted in the /app22/data.
   ---
   tags:
     - System

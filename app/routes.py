@@ -194,7 +194,7 @@ def cat():
     with open(file, 'rb') as f:
       content = f.read()
       checksum = hashlib.md5(content).hexdigest()
-      filename = os.path.basename(file)
+      filename = os.path.abspath(file)
       data[filename] = {}
       data[filename]['checksum'] = checksum
       data[filename]['content'] = content.decode("utf-8")

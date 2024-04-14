@@ -1,0 +1,20 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!main'
+      - '!master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: test-build-image
+        uses: docker/build-push-action@v3
+        with:
+          push: false
+          tags: app22

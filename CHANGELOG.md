@@ -1,14 +1,11 @@
 # Changelog
 
-## [v1.0.1] - 2024-04-07
-
-### Added
-- New endpoints `/log,`
-
-## [v1.0.0] - 2024-03-25
+## [v1.0.0] - 2024-04-14
 
 ### Added
 
+- Added Swagger UI
+- New endpoints
 - /healthz, /healthz/toggle endpoint
 
 ### Removed
@@ -17,12 +14,32 @@
 
 ### Changed
 
-- Configuration env variables names
-- /api/tasks -> /tasks
 - Refactored
 
 ## [v0]
 
 ### Added
 
-- Initial release
+- Initial release with UI# Changelog
+
+## [v1.0.0] - 2024-04-14
+
+### Added
+
+- Added Swagger UI
+- New endpoints
+- /healthz, /healthz/toggle endpoint
+
+### Removed
+
+- UI
+
+### Changed
+
+- Refactored
+
+## [v0]
+
+### Added
+
+- Initial release with UI

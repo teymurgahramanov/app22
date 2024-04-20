@@ -33,7 +33,7 @@ jobs:
         with:
           name: ${{ inputs.release-name }}
           tag: ${{ inputs.release-name }}
-          bodyFile: ./CHANGELOG.md
+          body: ""
           allowUpdates: true
           artifactErrorsFailBuild: true
           makeLatest: true

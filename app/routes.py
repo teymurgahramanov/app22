@@ -18,7 +18,7 @@ routes_blueprint = Blueprint('routes',__name__)
 def index():
   return redirect('/doc')
 
-@routes_blueprint.route('/info')
+@routes_blueprint.route('/sys')
 def info():
   """
   Get system information.
@@ -189,15 +189,15 @@ def cat():
                 description: Content of the file
   """
   data = {}
-  files = glob.glob("data/*")
-  for file in files:
-    with open(file, 'rb') as f:
-      content = f.read()
-      checksum = hashlib.md5(content).hexdigest()
-      filename = os.path.abspath(file)
-      data[filename] = {}
-      data[filename]['checksum'] = checksum
-      data[filename]['content'] = content.decode("utf-8")
+  for root, dirs, files in os.walk("data"):
+      for file in files:
+          filepath = os.path.abspath(os.path.join(root, file))
+          with open(filepath, 'rb') as f:
+              content = f.read()
+              checksum = hashlib.md5(content).hexdigest()
+              data[filepath] = {}
+              data[filepath]['checksum'] = checksum
+              data[filepath]['content'] = content.decode("utf-8")
   return jsonify(data)
 
 @routes_blueprint.route('/database')
@@ -216,42 +216,8 @@ def add_request():
   responses:
     200:
       description: OK
-      schema:
-        type: object
-        properties:
-          db:
-            type: string
-            description: Database connection URL
-          dbParams:
-            type: string
-            description: Database connection parameters
-          connected:
-            type: boolean
-            description: Indicates if the database connection is successful
-          writable:
-            type: boolean
-            description: Indicates if writing to the database is successful
-          exception:
-            type: string
-            description: Indicates last exception occured during transaction
-          data:
-            type: array
-            description: List of recent request data
-            items:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: Request ID
-                timestamp:
-                  type: string
-                  format: date-time
-                  description: Request timestamp
-                source:
-                  type: string
-                  description: Remote IP address
   """
-  data = {'db': '', 'dbParams': '', 'connected': True, 'writable': True, 'data': []}
+  data = {'db': '', 'connected': True, 'writable': True, 'data': []}
   limit = request.args.get('limit', default = 5, type = int)
   try:
     record = database.Requests(datetime.datetime.now(),request.remote_addr)
@@ -272,7 +238,6 @@ def add_request():
     pass
   else:
     data['db'] = str(database.db.engine.url)
-    data['dbParams'] = str(database.db.engine.url.query)
     for record in records:
       record_dict = record.__dict__.copy()
       record_dict.pop('_sa_instance_state', None)
@@ -289,6 +254,29 @@ def handle_task(data):
     data_dict = data.__dict__
     data_dict.pop('_sa_instance_state', None)
     return jsonify(data_dict)
+
+@routes_blueprint.route('/tasks', methods=['POST'])
+def add_task():
+  """
+  Add new task.
+  ---
+  tags:
+    - ToDo
+  description: Add a new task.
+  parameters:
+    - name: body
+      in: body
+      required: true
+      schema:
+        $ref: '#/definitions/Task'
+  responses:
+    201:
+      description: Task added successfully
+    default:
+      description: Unexpected error
+  """
+  data = todo.add_task()
+  return handle_task(data), 201
 
 @routes_blueprint.route('/tasks', methods=['GET'])
 def get_tasks():
@@ -318,29 +306,6 @@ def get_tasks():
       task_dict.pop('_sa_instance_state', None)
       tasks_dicts.append(task_dict)
   return jsonify(tasks_dicts), 200
-
-@routes_blueprint.route('/tasks', methods=['POST'])
-def add_task():
-  """
-  Add new task.
-  ---
-  tags:
-    - ToDo
-  description: Add a new task.
-  parameters:
-    - name: body
-      in: body
-      required: true
-      schema:
-        $ref: '#/definitions/Task'
-  responses:
-    201:
-      description: Task added successfully
-    default:
-      description: Unexpected error
-  """
-  data = todo.add_task()
-  return handle_task(data), 201
 
 @routes_blueprint.route('/tasks/<task_id>', methods=['GET'])
 def get_task(task_id):

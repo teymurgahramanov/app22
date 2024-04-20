@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+
+  app22:
+    image: teymurgahramanov/app22:latest
+    #build:
+    #  context: .
+    container_name: app22
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      APP22_DEBUG: 0
+      #APP22_VERSION: v1
+      #APP22_DB_URL: postgresql://app22:app22@postgres:5432/app22
+      #APP22_DB_URL: mysql://app22:app22@mysql:3306/app22
+      #APP22_DB_OPTIONS: '{}'
+    depends_on:
+      - postgres
+      - mysql
+
+  postgres:
+    image: postgres:15.6
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: app22
+      POSTGRES_PASSWORD: app22
+      POSTGRES_DB: app22
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: app22
+      MYSQL_DATABASE: app22
+      MYSQL_USER: app22
+      MYSQL_PASSWORD: app22

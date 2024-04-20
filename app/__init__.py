@@ -31,7 +31,7 @@ def create_app() :
       "termsOfService": ''
     },
     "schemes": [
-      "http"
+      "http","https"
     ],
     "operationId": "getmyData",
     "definitions": {
@@ -50,7 +50,6 @@ def create_app() :
         }
     ]
   }
-
   swagger = Swagger(app, template=swagger_template, config=swagger_config)
   with app.app_context():
     try:

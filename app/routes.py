@@ -18,6 +18,19 @@ routes_blueprint = Blueprint('routes',__name__)
 def index():
   return redirect('/doc')
 
+@routes_blueprint.route('/version')
+def version():
+  """
+  Get version.
+  ---
+  tags:
+    - System
+  responses:
+    200:
+      description: OK
+  """
+  return jsonify(current_app.config['VERSION'])
+
 @routes_blueprint.route('/sys')
 def info():
   """
@@ -32,7 +45,6 @@ def info():
   data = {}
   data["hostname"] = socket.gethostname()
   data["timedate"] = datetime.datetime.now()
-  data["version"] = current_app.config['VERSION']
   return jsonify(data)
 
 @routes_blueprint.route('/env')

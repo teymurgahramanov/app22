@@ -1,24 +1,24 @@
 # App22
-_The most useful multipurpose web application to perform labs  and tests in a container environment!_
+_The most useful web application to perform labs and tests in a container environment!_
 
 ## Features ###
 With App22 you can do the following:
 
-- Get request headers behind a reverse proxy
-- Get container system information, environment variables, time date, etc.
-- Perform various simulations such as response delay or system crash.
-- Experiment with various deployment strategies.
-- Experiment with Kubernetes Probes.
-- Test SQL database failover and replication.
-- Test Kubernetes storage resiliency.
-- Test Kubernetes ConfigMap and Secret injection.
-- Test Prometheus scraping and alerts.
-- Test Load Balancer, API Gateway, and Service Mesh.
+- Get container system information `/sys`
+- Get environment variables `/env`
+- Get request headers `/headers`
+- Simulate custom response delay and status code `/response`
+- Simulate system failure `/crash`
+- Experiment with various deployment strategies by setting custom version `/version`
+- Experiment with Kubernetes probes `/healthz` `/healthz/toggle`
+- Test SQL database failover and replication `/database`
+- Test Kubernetes PersistentVolume, ConfigMap, and Secret `/cat`
+- Test Prometheus scraping and alerts `/metrics`
+- Test API Gateway and Service Mesh with ToDo List API `/tasks`
 
-... and much more. Take a look at the documentation on `/doc`.
+... and much more. Take a look at the Swagger documentation on `/doc`.
 
 ## Run
-### Docker
 ```
 $ docker run --rm --name app22 -p 5000:5000 teymurgahramanov/app22:latest
 ```

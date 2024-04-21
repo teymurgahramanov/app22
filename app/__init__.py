@@ -26,8 +26,8 @@ def create_app() :
   swagger_template = {
     "swagger": "2.0",
     "info": {
-      "title": "App22 API",
-      "description": "The most useful multipurpose web application to perform labs  and tests in a container environment!",
+      "title": "App22",
+      "description": "The most useful web application to perform labs and tests in a container environment!",
       "termsOfService": ''
     },
     "schemes": [

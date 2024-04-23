@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ github.repository }}:${{ inputs.release-name }},${{ github.repository }}:latest
+          tags: teymurgahramanov/app22:${{ inputs.release-name }},teymurgahramanov/app22:latest
 
       - name: Create Release
         uses: ncipollo/release-action@v1

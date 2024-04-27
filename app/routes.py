@@ -209,7 +209,11 @@ def cat():
               checksum = hashlib.md5(content).hexdigest()
               data[filepath] = {}
               data[filepath]['checksum'] = checksum
-              data[filepath]['content'] = content.decode("utf-8")
+              try:
+                data[filepath]['content'] = content.decode('utf-8')
+              except:
+                data[filepath]['content'] = '-'
+                pass
   return jsonify(data)
 
 @routes_blueprint.route('/database')

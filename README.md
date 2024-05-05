@@ -31,7 +31,7 @@ Default configuration [config.py](./config.py) can be overwritten using environm
 - __APP22_DEBUG__\
   Enable debug mode using `1`. Disabled by default.
 - __APP22_DB_URL__\
-  Set database connection string. Example:\
+  Set database connection string. MySQL and PostgreSQL are tested and supported. Example:\
   `postgresql://app22:app22@localhost:5432/app22`\
   https://docs.sqlalchemy.org/en/20/core/engines.html#engine-configuration.
 - __APP22_DB_OPTIONS__\

@@ -9,7 +9,7 @@ With App22 you can do the following:
 📝 Get HTTP request headers `/headers`  
 ⏳ Simulate custom HTTP response delay and status code `/response`  
 💥 Simulate system failure `/crash`  
-🔄️ Experiment with various deployment strategies `/version`
+🔄️ Experiment with various deployment strategies `/version`\
 💬 Experiment with various logging strategies `/log`  
 ⚙️ Experiment with Kubernetes probes `/healthz` `/healthz/toggle`  
 📄 Test SQL database failover and replication `/database`  

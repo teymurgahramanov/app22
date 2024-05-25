@@ -10,7 +10,7 @@ With App22 you can do the following:
 ⏳ Simulate custom response delay and status code `/response`  
 💥 Simulate system failure `/crash`  
 🔄️ Experiment with various deployment strategies with custom versioning `/version`  
-⚙️ Experiment with Kubernetes probes `/health` `/health/toggle`  
+⚙️ Experiment with Kubernetes probes `/healthz` `/healthz/toggle`  
 💬 Experiment with various logging strategies `/log`  
 📄 Test SQL database failover and replication `/database`  
 💾 Test Kubernetes PersistentVolume, ConfigMap, and Secret `/cat`  

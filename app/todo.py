@@ -1,62 +1,72 @@
-from flask import request
-from flask_expects_json import expects_json
+from pydantic import BaseModel
+from typing import Optional
+from sqlalchemy.orm import Session
 import app.database as database
 import uuid
 import datetime
 
-tasks = {}
+# Pydantic models for request/response validation
+class TaskCreate(BaseModel):
+    title: str
+    description: Optional[str] = ""
+    done: Optional[bool] = False
 
-schema = {
-  "type": "object",
-  "properties": {
-    "title": { "type": "string" },
-    "description": {"type": "string"},
-    "done": { "type": "boolean"}
-  },
-  "required": ["title"]
-}
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    done: Optional[bool] = None
 
-def get_tasks(limit):
-  tasks = database.Tasks.query.order_by(database.Tasks.updated_at.desc()).limit(limit).all()
-  database.db.session.close()
-  return tasks
+class TaskResponse(BaseModel):
+    id: str
+    title: str
+    description: str
+    done: bool
+    updated_at: datetime.datetime
 
-def get_task(task_id):
-  task = database.Tasks.query.filter_by(id=task_id).first()
-  return task
+    class Config:
+        from_attributes = True
 
-@expects_json(schema)
-def add_task():
-  task_id = str(uuid.uuid4())
-  task = database.Tasks(task_id,request.json['title'],request.json.get('description',''),False,datetime.datetime.now())
-  database.db.session.add(task)
-  database.db.session.commit()
-  task = get_task(task_id)
-  database.db.session.close()
-  return task
+def get_tasks(db: Session, limit: int = 10):
+    tasks = db.query(database.Tasks).order_by(database.Tasks.updated_at.desc()).limit(limit).all()
+    return tasks
 
-@expects_json(schema)
-def update_task(task_id):
-  task = get_task(task_id)
-  if task is None:
-    database.db.session.close()
-    return None
-  else:
-    for k in request.json:
-      setattr(task, k, request.json[k])
-    task.updated_at = datetime.datetime.now()
-    database.db.session.commit()
-    task = get_task(task_id)
-    database.db.session.close()
-  return task
+def get_task(db: Session, task_id: str):
+    task = db.query(database.Tasks).filter(database.Tasks.id == task_id).first()
+    return task
 
-def remove_task(task_id):
-  task = get_task(task_id)
-  if task is None:
-    database.db.session.close()
-    return None
-  else:
-    database.db.session.delete(task)
-    database.db.session.commit()
-    database.db.session.close()
+def add_task(db: Session, task: TaskCreate):
+    task_id = str(uuid.uuid4())
+    db_task = database.Tasks(
+        id=task_id,
+        title=task.title,
+        description=task.description,
+        done=task.done,
+        updated_at=datetime.datetime.now()
+    )
+    db.add(db_task)
+    db.commit()
+    db.refresh(db_task)
+    return db_task
+
+def update_task(db: Session, task_id: str, task: TaskUpdate):
+    db_task = get_task(db, task_id)
+    if db_task is None:
+        return None
+    
+    update_data = task.dict(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(db_task, field, value)
+    
+    db_task.updated_at = datetime.datetime.now()
+    db.commit()
+    db.refresh(db_task)
+    return db_task
+
+def remove_task(db: Session, task_id: str):
+    db_task = get_task(db, task_id)
+    if db_task is None:
+        return None
+    
+    db.delete(db_task)
+    db.commit()
     return True

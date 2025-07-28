@@ -1,13 +1,13 @@
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-from config import Config
+from config import config
 
 # Create engine
 engine = create_engine(
-    Config.SQLALCHEMY_DATABASE_URI,
-    echo=Config.SQLALCHEMY_ECHO,
-    **Config.SQLALCHEMY_ENGINE_OPTIONS
+    config.database_uri,
+    echo=config.database_echo,
+    **config.database_options
 )
 
 # Create SessionLocal class

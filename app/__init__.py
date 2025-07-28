@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from fastapi import Response
 from fastapi.responses import PlainTextResponse
-from config import Config
+from config import config
 from app.database import create_tables
 from app.routes import router
 
@@ -11,7 +11,7 @@ def create_app():
     app = FastAPI(
         title="App22",
         description="The most useful web application to perform labs and tests in a container environment!",
-        version=Config.VERSION or "1.0.0",
+        version=config.version or "1.0.0",
         docs_url="/docs",
         redoc_url="/redoc"
     )

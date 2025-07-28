@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from sqlalchemy.orm import Session
 import app.todo as todo
 import app.database as database
-from config import Config
+from config import config
 
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',stream=sys.stdout, level=logging.INFO, datefmt='%Y/%m/%d %H:%M:%S')
 router = APIRouter()
@@ -23,7 +23,7 @@ def index():
 @router.get("/version", tags=["System"])
 def version():
     """Get version."""
-    return Config.VERSION
+    return config.version
 
 @router.get("/sys", tags=["System"])
 def info():

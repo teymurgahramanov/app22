@@ -1,11 +1,11 @@
 from app import create_app
-from config import Config
+from config import config
 import uvicorn
 
 app = create_app()
 
 if __name__ == '__main__':
-    if Config.DEBUG:
-        uvicorn.run("run:app", host='0.0.0.0', port=5000, reload=True)
+    if config.debug:
+        uvicorn.run("run:app", host=config.host, port=config.port, reload=True)
     else:
-        uvicorn.run(app, host='0.0.0.0', port=5000)
+        uvicorn.run(app, host=config.host, port=config.port)

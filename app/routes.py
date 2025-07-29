@@ -8,6 +8,7 @@ import hashlib
 import logging
 from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 import app.todo as todo
 import app.database as database
@@ -18,7 +19,7 @@ router = APIRouter()
 
 @router.get("/", include_in_schema=False)
 def index():
-    return {"message": "Redirect to /docs for API documentation"}
+    return RedirectResponse(url="/docs")
 
 @router.get("/version", tags=["System"])
 def version():

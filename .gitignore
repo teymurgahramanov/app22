@@ -3,5 +3,5 @@
 modules/database
 .vscode/
 *.db
-.evn
+.env
 data/

@@ -22,12 +22,12 @@ class Config(BaseSettings):
     
     # Application Settings
     version: Optional[str] = Field(
-        default=None,
+        default="v1.0.0",
         description="Application version"
     )
     
     secret_key: str = Field(
-        default="app22-development-key-change-in-production",
+        default="secret",
         description="Secret key for session management"
     )
     
@@ -119,22 +119,6 @@ class Config(BaseSettings):
         if isinstance(v, str):
             return v.lower() in ('1', 'true', 'yes', 'on')
         return bool(v)
-    
-    @field_validator('secret_key')
-    @classmethod
-    def validate_secret_key(cls, v):
-        """Ensure secret key is secure in production."""
-        if not v:
-            raise ValueError("SECRET_KEY cannot be empty")
-        
-        # Warn about default key in production
-        if v == "app22-development-key-change-in-production":
-            warnings.warn(
-                "Using default secret key! Change APP22_SECRET_KEY in production.",
-                UserWarning
-            )
-        
-        return v
 
 
 # Global configuration instance

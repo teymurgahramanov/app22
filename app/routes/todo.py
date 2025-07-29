@@ -55,7 +55,7 @@ def update_task_logic(db: Session, task_id: str, task: TaskUpdate):
     if db_task is None:
         return None
     
-    update_data = task.dict(exclude_unset=True)
+    update_data = task.model_dump(exclude_unset=True)  # Fixed deprecation warning
     for field, value in update_data.items():
         setattr(db_task, field, value)
     

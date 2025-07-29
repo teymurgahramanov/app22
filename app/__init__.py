@@ -4,7 +4,7 @@ from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from fastapi import Response
 from fastapi.responses import PlainTextResponse
 from config import config
-from app.database import create_tables
+from app.routes.database import create_tables
 from app.routes import router
 
 def create_app():
@@ -39,4 +39,4 @@ def create_app():
     # Include router
     app.include_router(router)
     
-    return app
+    return app 

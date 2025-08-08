@@ -3,7 +3,8 @@ import logging
 from typing import Optional, Dict, Any
 from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, Query, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
+from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, generate_latest
 from config import config
 
 # Configure logging
@@ -35,6 +36,12 @@ class LogResponse(BaseModel):
 
 # Global health status
 healthy = True
+
+# Metrics registry and metrics under App tag
+registry = CollectorRegistry()
+app_counter = Counter('app_counter', 'A test counter', ['name'], registry=registry)
+app_gauge = Gauge('app_gauge', 'A test gauge', ['name'], registry=registry)
+app_histogram = Histogram('app_histogram', 'A test histogram', ['name'], registry=registry)
 
 @router.get("/version", response_model=VersionResponse, tags=["App"])
 def version() -> VersionResponse:
@@ -160,3 +167,53 @@ def log(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error processing log request"
         ) 
+
+
+@router.get('/metrics', response_class=PlainTextResponse, tags=["App"])
+def metrics():
+    """Expose custom Prometheus metrics for App."""
+    return generate_latest(registry)
+
+
+@router.post('/metrics/counter', tags=["App"])
+def metrics_counter(
+    name: str = Query(..., max_length=64, description='Counter label name'),
+    inc: float = Query(1.0, ge=0.0, description='Increment value')
+):
+    try:
+        app_counter.labels(name=name).inc(inc)
+        return {"ok": True, "type": "counter", "name": name, "inc": inc}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post('/metrics/gauge', tags=["App"])
+def metrics_gauge(
+    name: str = Query(..., max_length=64, description='Gauge label name'),
+    set_value: Optional[float] = Query(None, description='Set gauge to this value'),
+    inc: Optional[float] = Query(None, description='Increment gauge by this value'),
+    dec: Optional[float] = Query(None, description='Decrement gauge by this value'),
+):
+    try:
+        gauge = app_gauge.labels(name=name)
+        if set_value is not None:
+            gauge.set(set_value)
+        if inc is not None:
+            gauge.inc(inc)
+        if dec is not None:
+            gauge.dec(dec)
+        return {"ok": True, "type": "gauge", "name": name}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post('/metrics/histogram', tags=["App"])
+def metrics_histogram(
+    name: str = Query(..., max_length=64, description='Histogram label name'),
+    observe: float = Query(..., description='Observation value')
+):
+    try:
+        app_histogram.labels(name=name).observe(observe)
+        return {"ok": True, "type": "histogram", "name": name, "observe": observe}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

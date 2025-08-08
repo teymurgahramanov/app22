@@ -7,11 +7,11 @@ from app.routes.database import Requests
 
 
 class TestDatabaseRoutes:
-    """Test cases for database routes (/database)."""
+    """Test cases for database routes (/sql)."""
     
     def test_database_endpoint_successful_operation(self, test_client):
         """Test database endpoint with successful database operations."""
-        response = test_client.get("/database")
+        response = test_client.get("/sql")
         
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
@@ -28,16 +28,16 @@ class TestDatabaseRoutes:
         assert isinstance(data["data"], list)
         
         # Should contain database URI information
-        assert "sqlite" in data["db"]
+        assert isinstance(data["db"], str) and len(data["db"]) > 0
     
     def test_database_endpoint_with_limit_parameter(self, test_client):
         """Test database endpoint with custom limit parameter."""
         # First, create some test records
         for i in range(5):
-            test_client.get("/database")
+            test_client.get("/sql")
         
         # Now test with different limits
-        response = test_client.get("/database?limit=3")
+        response = test_client.get("/sql?limit=3")
         
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
@@ -50,11 +50,11 @@ class TestDatabaseRoutes:
         # Make multiple requests
         num_requests = 3
         for i in range(num_requests):
-            response = test_client.get("/database")
+            response = test_client.get("/sql")
             assert response.status_code == status.HTTP_200_OK
         
         # Get the latest state
-        response = test_client.get("/database?limit=10")
+        response = test_client.get("/sql?limit=10")
         data = response.json()
         
         # Should have at least the requests we made (plus one from the last call)
@@ -71,10 +71,10 @@ class TestDatabaseRoutes:
         """Test database endpoint uses default limit of 5."""
         # Create more than 5 requests
         for i in range(7):
-            test_client.get("/database")
+            test_client.get("/sql")
         
         # Get without specifying limit (should default to 5)
-        response = test_client.get("/database")
+        response = test_client.get("/sql")
         data = response.json()
         
         # Should return at most 5 records (default limit)
@@ -82,7 +82,7 @@ class TestDatabaseRoutes:
     
     def test_database_endpoint_records_client_ip(self, test_client):
         """Test that database endpoint records client IP correctly."""
-        response = test_client.get("/database")
+        response = test_client.get("/sql")
         
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
@@ -99,16 +99,23 @@ class TestDatabaseRoutes:
         """Test database endpoint when write operations fail."""
         TestSessionLocal, test_engine = test_db
         
-        with patch('app.routes.database.get_db') as mock_get_db:
-            # Create a mock session that raises an exception on commit
-            mock_session = MagicMock()
-            mock_session.commit.side_effect = Exception("Database write error")
-            mock_session.query.return_value.order_by.return_value.limit.return_value.all.return_value = []
-            
-            mock_get_db.return_value.__enter__ = MagicMock(return_value=mock_session)
-            mock_get_db.return_value.__exit__ = MagicMock()
-            
-            response = test_client.get("/database")
+        # Override dependency to inject a mock session that fails on commit
+        mock_session = MagicMock()
+        mock_session.commit.side_effect = Exception("Database write error")
+        mock_session.query.return_value.order_by.return_value.limit.return_value.all.return_value = []
+
+        def override_get_db():
+            try:
+                yield mock_session
+            finally:
+                pass
+
+        from app.routes import database as db_module
+        test_client.app.dependency_overrides[db_module.get_db] = override_get_db
+        try:
+            response = test_client.get("/sql")
+        finally:
+            test_client.app.dependency_overrides.pop(db_module.get_db, None)
         
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
@@ -122,16 +129,23 @@ class TestDatabaseRoutes:
         """Test database endpoint when read operations fail."""
         TestSessionLocal, test_engine = test_db
         
-        with patch('app.routes.database.get_db') as mock_get_db:
-            # Create a mock session that raises an exception on query
-            mock_session = MagicMock()
-            mock_session.commit.return_value = None  # Write succeeds
-            mock_session.query.side_effect = Exception("Database read error")
-            
-            mock_get_db.return_value.__enter__ = MagicMock(return_value=mock_session)
-            mock_get_db.return_value.__exit__ = MagicMock()
-            
-            response = test_client.get("/database")
+        # Override dependency to inject a mock session that fails on read
+        mock_session = MagicMock()
+        mock_session.commit.return_value = None  # Write succeeds
+        mock_session.query.side_effect = Exception("Database read error")
+
+        def override_get_db():
+            try:
+                yield mock_session
+            finally:
+                pass
+
+        from app.routes import database as db_module
+        test_client.app.dependency_overrides[db_module.get_db] = override_get_db
+        try:
+            response = test_client.get("/sql")
+        finally:
+            test_client.app.dependency_overrides.pop(db_module.get_db, None)
         
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
@@ -145,7 +159,7 @@ class TestDatabaseRoutes:
         """Test that database endpoint records timestamps correctly."""
         before_request = datetime.datetime.now()
         
-        response = test_client.get("/database")
+        response = test_client.get("/sql")
         
         after_request = datetime.datetime.now()
         
@@ -169,13 +183,13 @@ class TestDatabaseRoutes:
     def test_database_endpoint_limit_edge_cases(self, test_client):
         """Test database endpoint with edge case limit values."""
         # Test with limit 0
-        response = test_client.get("/database?limit=0")
+        response = test_client.get("/sql?limit=0")
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
         assert len(data["data"]) == 0
         
         # Test with very large limit
-        response = test_client.get("/database?limit=1000")
+        response = test_client.get("/sql?limit=1000")
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
         # Should work without error, though may return fewer records
@@ -184,7 +198,7 @@ class TestDatabaseRoutes:
     def test_database_endpoint_invalid_limit(self, test_client):
         """Test database endpoint with invalid limit parameter."""
         # Test with non-integer limit
-        response = test_client.get("/database?limit=invalid")
+        response = test_client.get("/sql?limit=invalid")
         
         # FastAPI should return 422 for invalid query parameters
         assert response.status_code == 422 

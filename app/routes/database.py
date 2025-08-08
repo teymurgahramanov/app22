@@ -90,7 +90,7 @@ def create_tables():
 # Router for database endpoints
 router = APIRouter()
 
-@router.get("/database", response_model=DatabaseStatusResponse, tags=["Database"])
+@router.get("/sql", response_model=DatabaseStatusResponse, tags=["Database"])
 def add_request(
     limit: int = Query(
         5, 

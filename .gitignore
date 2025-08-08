@@ -5,3 +5,4 @@ modules/database
 *.db
 .env
 data/
+*.pytest_cache/*

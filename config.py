@@ -101,6 +101,22 @@ class Config(BaseSettings):
     def database_options(self) -> Dict[str, Any]:
         return self.db_options
 
+    # MongoDB settings
+    mongo_uri: str = Field(
+        default="mongodb://localhost:27017",
+        description="MongoDB connection URI",
+    )
+    mongo_db: str = Field(default="app22", description="MongoDB database name")
+    mongo_collection: str = Field(
+        default="Requests", description="MongoDB collection for request logs"
+    )
+    mongo_server_selection_timeout_ms: int = Field(
+        default=500, description="MongoDB server selection timeout in ms"
+    )
+    mongo_client_options: Dict[str, Any] = Field(
+        default_factory=dict, description="Additional MongoClient options"
+    )
+
     @field_validator('db_options', mode='before')
     @classmethod
     def parse_database_options(cls, v):

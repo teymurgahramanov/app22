@@ -1,29 +1,44 @@
 # App22
-_The most useful web application to perform tests in the Kubernetes!_
+_The most useful web application to perform tests in Kubernetes!_
+
+Disclaimer: Project is fully managed by AI 🤖
 
 ## Features ###
 With App22 you can do the following:
 
-📦 Get system information `/sys`  
-💲 Get environment variables `/env`  
-📝 Get HTTP request headers `/headers`  
-⏳ Simulate custom HTTP response delay and status code `/response`  
-💥 Simulate system failure `/crash`  
-🔄️ Experiment with various deployment strategies `/version`\
-💬 Experiment with various logging strategies `/log`  
-⚙️ Experiment with Kubernetes probes `/healthz` `/healthz/toggle`  
-📄 Test SQL database failover and replication `/database`  
-💾 Test Kubernetes PersistentVolume, ConfigMap, and Secret `/cat`  
-📊 Test Prometheus scraping and alerting `/metrics`  
-🛡️ Test API Gateway and Service Mesh with ToDo List API `/tasks`  
+📦 Get system information: `/sys`
+💲 Get environment variables: `/env`
+📝 Inspect HTTP request headers: `/headers`
+⏳ Simulate custom HTTP status and delay: `/response`
+💥 Simulate system failure: `/crash`
+🔄️ Experiment with deployment strategies: `/version`
+💬 Exercise logging strategies: `/log`
+⚙️ Experiment with Kubernetes probes: `/healthz`
+🗄️ Interact with SQL databases: `/sql`
+🍃 Interact with MongoDB: `/mongodb`
+💾 Inspect files in mounted volumes/configs: `/cat`
+📊 Simulate and scrape Prometheus metrics: `/metrics`
+🛡️ ToDo app simulator: `/tasks`
 
-... and much more. Take a look at the Swagger documentation on `/doc`.
+... and much more. Take a look at the documentation on `/docs`.
 
-## Run
+## Run in Docker
 ```
 $ docker run --rm --name app22 -p 5000:5000 teymurgahramanov/app22:latest
 ```
 
+## Run in Kubernetes
+```
+helm repo add teymurgahramanov https://teymurgahramanov.github.io/charts && helm repo update teymurgahramanov
+```
+```
+helm upgrade --install app22 teymurgahramanov/app22 \
+   --namespace app22 \
+   --create-namespace
+```
+```
+kubectl -n app22 port-forward svc/app22 5000:5000
+```
 ## Configuration
 Default configuration [config.py](./config.py) can be overwritten using environment variables:
 
@@ -37,3 +52,8 @@ Default configuration [config.py](./config.py) can be overwritten using environm
 | `APP22_DB_URL` | `sqlite:///app22.db` | Database connection string. MySQL and PostgreSQL are tested and supported. Example: `postgresql://app22:app22@localhost:5432/app22` |
 | `APP22_DB_ECHO` | `false` | Enable SQLAlchemy query logging for debugging database operations. |
 | `APP22_DB_OPTIONS` | `{}` | Additional SQLAlchemy engine options as a JSON string. Example: `'{"pool_timeout": 5,"connect_args": {"sslmode": "require"}}'` |
+| `APP22_MONGO_URI` | `mongodb://localhost:27017` | MongoDB connection URI. |
+| `APP22_MONGO_DB` | `app22` | MongoDB database name. |
+| `APP22_MONGO_COLLECTION` | `Requests` | MongoDB collection used by `/mongodb` endpoint. |
+| `APP22_MONGO_SERVER_SELECTION_TIMEOUT_MS` | `500` | MongoDB server selection timeout in milliseconds. |
+| `APP22_MONGO_CLIENT_OPTIONS` | `{}` | Additional MongoClient options as a JSON string. |

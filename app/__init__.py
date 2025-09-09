@@ -1,63 +1,63 @@
-from flask import Flask
-from flasgger import Swagger
-from config import Config
-from app.database import db
-from app.todo import schema as task_schema
-from prometheus_flask_exporter import PrometheusMetrics
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from config import config
+from app.routes.database import create_tables
+from app.routes import router
 
-def create_app() :
-  app = Flask(__name__, instance_relative_config=True)
-  app.config.from_object(Config)
-  swagger_config = {
-    "headers": [
-    ],
-    "specs": [
-        {
-            "endpoint": 'apispec_1',
-            "route": '/apispec_1.json',
-            "rule_filter": lambda rule: True,  # all in
-            "model_filter": lambda tag: True,  # all in
-        }
-    ],
-    "static_url_path": "/flasgger_static",
-    "swagger_ui": True,
-    "specs_route": "/doc/"
-  }
-  swagger_template = {
-    "swagger": "2.0",
-    "info": {
-      "title": "App22",
-      "description": "The most useful web application to perform labs and tests in a container environment!",
-      "termsOfService": ''
+# Define tags with descriptions for OpenAPI docs
+tags_metadata = [
+    {
+        "name": "System",
+        "description": "System information. Get system stats, environment variables, and simulate crash.",
     },
-    "schemes": [
-      "http","https"
-    ],
-    "operationId": "getmyData",
-    "definitions": {
-      'Task': task_schema
+    {
+        "name": "App",
+        "description": "Application health, version information, and logging utilities. Test health probes, logging, monitoring, and various deployment strategies.",
     },
-    "consumes": 'application/json',
-    "produces": 'application/json',
-    "tags": [
-        {
-          "name": "System",
-          "description": "Interact with the container."
-        },
-        {
-          "name": "ToDo",
-          "description": "ToDo List API."
-        }
-    ]
-  }
-  swagger = Swagger(app, template=swagger_template, config=swagger_config)
-  with app.app_context():
+    {
+        "name": "HTTP",
+        "description": "HTTP utilities. Inspect headers, test responses, and debug HTTP requests.",
+    },
+    {
+        "name": "Filesystem",
+        "description": "File system operations. Read files, navigate directories, and perform file operations.",
+    },
+    {
+        "name": "Database",
+        "description": "Database connectivity and status testing.",
+    },
+    {
+        "name": "ToDo", 
+        "description": "ToDo app simulator. Create, read, update, and delete tasks.",
+    }
+]
+
+def create_app():
+    app = FastAPI(
+        title="App22",
+        description="The most useful web application to perform tests in the Kubernetes!",
+        version=config.version or "1.0.0",
+        docs_url="/docs",
+        redoc_url="/redoc",
+        openapi_tags=tags_metadata
+    )
+    
+    # Add CORS middleware
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    
+    # Create database tables
     try:
-      db.init_app(app)
-      db.create_all()
+        create_tables()
     except Exception as e:
-      print(e)
-    PrometheusMetrics(app)
-    from . import routes
-    app.register_blueprint(routes.routes_blueprint)
-    return app
+        print(f"Database initialization error: {e}")
+    
+    # Include router
+    app.include_router(router)
+    
+    return app 

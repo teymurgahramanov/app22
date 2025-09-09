@@ -2,31 +2,98 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.1.0] - 2025-08-08
+## [2.0.0] - 2025-09-09
+
+### BREAKING CHANGES
+- **Framework Migration**: Complete migration from Flask to FastAPI
+  - Replaced Flask, Flasgger, and Flask-SQLAlchemy with FastAPI, Uvicorn, and SQLAlchemy 2.0
+  - All endpoints now return FastAPI response models with proper OpenAPI documentation
+  - Server changed from Waitress to Uvicorn with hot reload support in debug mode
 
 ### Added
-- New MongoDB endpoint `/mongodb` to insert a heartbeat and return recent request documents.
-  - Configurable via environment variables: `APP22_MONGO_URI`, `APP22_MONGO_DB`, `APP22_MONGO_COLLECTION`, `APP22_MONGO_SERVER_SELECTION_TIMEOUT_MS`, `APP22_MONGO_CLIENT_OPTIONS`.
-  - Added `pymongo` dependency.
-- Metrics are now under the "App" tag with a custom registry:
-  - GET `/metrics` exposes Prometheus metrics.
-  - POST `/metrics/counter` increments a labeled counter.
-  - POST `/metrics/gauge` sets/increments/decrements a labeled gauge.
-  - POST `/metrics/histogram` records observations.
-- Filesystem compatibility endpoint `/cat` to list and preview files under `data/` (used by tests and demos).
-- Tests for MongoDB and metrics endpoints.
+- **FastAPI Core Dependencies**:
+  - `fastapi==0.104.1` - Modern, fast web framework with automatic OpenAPI documentation
+  - `uvicorn[standard]==0.24.0` - ASGI server with WebSocket and HTTP/2 support
+  - `pydantic==2.5.0` - Data validation using Python type annotations
+  - `pydantic-settings==2.1.0` - Settings management with environment variable support
+  - `python-multipart==0.0.6` - Form and file upload support
+
+- **Enhanced API Documentation**: 
+  - Interactive OpenAPI documentation at `/docs` (Swagger UI)
+  - Alternative documentation at `/redoc` (ReDoc)
+  - Comprehensive API categorization with tags: System, App, HTTP, Filesystem, Database, ToDo
+  - Detailed response models and error handling
+
+- **Improved Configuration System**:
+  - Pydantic-based configuration with type validation
+  - Environment variable support with `APP22_` prefix
+  - Backward compatibility properties for legacy configuration access
+  - Enhanced MongoDB configuration options
+
+- **Modern Route Architecture**:
+  - Modular router system with separate files for each functional area
+  - FastAPI dependency injection for database sessions
+  - Proper async/await support where applicable
+  - Type-safe request/response models
+
+- **Enhanced Testing Suite**:
+  - Updated to use `httpx` instead of Flask test client
+  - `pytest-asyncio` support for async testing
+  - Improved test isolation with proper database cleanup
+  - Mock-friendly implementations for external dependencies
 
 ### Changed
-- Renamed SQL endpoint from `/database` to `/sql`.
-- Moved metrics endpoint from application root to the App router; removed the old global `/metrics` registration from application startup.
-- Updated documentation to reflect endpoint changes and new features.
+- **Application Structure**:
+  - Reorganized routes into separate modules under `app/routes/`
+  - Centralized router registration in `app/routes/__init__.py`
+  - Database models and setup moved to dedicated `database.py` module
+  - Configuration migrated to Pydantic BaseSettings pattern
+
+- **Server Runtime**:
+  - Development server now uses Uvicorn with hot reload
+  - Production server uses Uvicorn without reload for better performance
+  - Removed Waitress dependency in favor of modern ASGI server
+
+- **Database Integration**:
+  - Updated to SQLAlchemy 2.0 with modern session management
+  - Proper dependency injection for database sessions
+  - Enhanced error handling and logging for database operations
+
+- **Docker & Deployment**:
+  - Updated Dockerfile to use Python 3.12.3
+  - Simplified container entrypoint to use new Uvicorn-based runner
+  - Updated Helm charts for FastAPI deployment patterns
+
+### Removed
+- **Legacy Flask Dependencies**:
+  - `Flask==2.1.2`
+  - `flasgger==0.9.7.1` (replaced by FastAPI's built-in OpenAPI)
+  - `Flask-SQLAlchemy==2.5.1`
+  - `waitress` (replaced by Uvicorn)
+  - `greenlet` and other Flask-specific dependencies
+
+- **Obsolete Packages**:
+  - Various Flask ecosystem packages no longer needed with FastAPI
+  - Legacy configuration patterns and imports
 
 ### Fixed
-- Stabilized database route tests for environment-agnostic database URI assertions.
-- Improved `/mongodb` implementation to tolerate mocked cursors in tests.
+- **Type Safety**: Full type annotations throughout the codebase
+- **Error Handling**: Consistent HTTP exception handling with proper status codes
+- **Documentation**: All endpoints now have comprehensive documentation
+- **Testing**: More reliable test suite with proper async support
+- **Configuration**: Robust environment variable parsing and validation
 
-### Notes
-- Backward-compatibility: `/database` path is replaced by `/sql`.
-- See `README.md` for updated usage examples and configuration.
+### Migration Notes
+- **API Compatibility**: All existing endpoints maintain the same paths and functionality
+- **Response Format**: JSON responses now use Pydantic models for consistency
+- **Environment Variables**: All `APP22_` prefixed variables continue to work as before
+- **Database**: Existing SQLite database files remain compatible
+- **Docker**: Container interface remains unchanged, only internal implementation differs
 
-[1.1.0]: https://github.com/your-org/app22/releases/tag/v1.1.0
+### Performance Improvements
+- **Faster Startup**: FastAPI's efficient routing and dependency injection
+- **Better Concurrency**: ASGI-based server supports WebSockets and HTTP/2
+- **Reduced Memory**: Elimination of Flask's overhead and dependencies
+- **Hot Reload**: Development server supports automatic reloading on code changes
+
+[2.0.0]: https://github.com/your-org/app22/releases/tag/v2.0.0

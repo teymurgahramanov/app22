@@ -3,11 +3,11 @@ name: Create release
 on:
   release:
     types: [published]
-    
+
 env:
   IMAGE_NAME: ${{ github.repository }}
   HELM_REPO_NAME: charts
-  HELM_REPO_OWNER: ${{ secrets.HELM_REPO_OWNER }
+  HELM_REPO_OWNER: ${{ secrets.HELM_REPO_OWNER }}
   HELM_REPO_TOKEN: ${{ secrets.HELM_REPO_TOKEN }}
   RELEASE_VERSION: ${{ github.event.release.tag_name }}
 

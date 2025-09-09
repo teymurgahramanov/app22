@@ -1,42 +1,40 @@
 # App22
 _The most useful web application to perform tests in Kubernetes!_
 
-Disclaimer: Project is fully managed by AI 🤖
-
 ## Features ###
 With App22 you can do the following:
 
-📦 Get system information: `/sys`
-💲 Get environment variables: `/env`
-📝 Inspect HTTP request headers: `/headers`
-⏳ Simulate custom HTTP status and delay: `/response`
-💥 Simulate system failure: `/crash`
-🔄️ Experiment with deployment strategies: `/version`
-💬 Exercise logging strategies: `/log`
-⚙️ Experiment with Kubernetes probes: `/healthz`
-🗄️ Interact with SQL databases: `/sql`
-🍃 Interact with MongoDB: `/mongodb`
-💾 Inspect files in mounted volumes/configs: `/cat`
-📊 Simulate and scrape Prometheus metrics: `/metrics`
+📦 Get system information: `/sys` \
+💲 Get environment variables: `/env` \
+📝 Inspect HTTP request headers: `/headers` \
+⏳ Simulate custom HTTP status and delay: `/response` \
+💥 Simulate system failure: `/crash` \
+🔄️ Experiment with deployment strategies: `/version` \
+💬 Exercise logging strategies: `/log` \
+⚙️ Experiment with Kubernetes probes: `/healthz` \
+🗄️ Interact with SQL databases: `/sql` \
+🍃 Interact with MongoDB: `/mongodb` \
+💾 Inspect files in mounted volumes/configs: `/cat` \
+📊 Simulate and scrape Prometheus metrics: `/metrics` \
 🛡️ ToDo app simulator: `/tasks`
 
-... and much more. Take a look at the documentation on `/docs`.
+... and much more!
 
 ## Run in Docker
-```
-$ docker run --rm --name app22 -p 5000:5000 teymurgahramanov/app22:latest
+```bash
+docker run --rm --name app22 -p 5000:5000 teymurgahramanov/app22:latest
 ```
 
 ## Run in Kubernetes
-```
+```bash
 helm repo add teymurgahramanov https://teymurgahramanov.github.io/charts && helm repo update teymurgahramanov
 ```
-```
+```bash
 helm upgrade --install app22 teymurgahramanov/app22 \
    --namespace app22 \
    --create-namespace
 ```
-```
+```bash
 kubectl -n app22 port-forward svc/app22 5000:5000
 ```
 ## Configuration

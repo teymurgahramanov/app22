@@ -1,5 +1,5 @@
 # App22
-_The most useful web application to perform tests in Kubernetes!_
+_The most useful web app to play with Kubernetes!_
 
 ## Features ###
 With App22 you can do the following:

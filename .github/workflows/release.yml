@@ -13,7 +13,7 @@ env:
   HELM_REPO_NAME: charts
   HELM_REPO_OWNER: ${{ secrets.HELM_REPO_OWNER }}
   HELM_REPO_TOKEN: ${{ secrets.HELM_REPO_TOKEN }}
-  RELEASE_VERSION: ${{ github.event.inputs.release-name }}
+  RELEASE_NAME: ${{ github.event.inputs.release-name }}
   CHART_FILE: helm/Chart.yaml
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.RELEASE_VERSION }}, ${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.IMAGE_NAME }}:${{ env.RELEASE_NAME }}, ${{ env.IMAGE_NAME }}:latest
 
       - name: Set up Helm
         uses: azure/setup-helm@v3
@@ -51,7 +51,7 @@ jobs:
 
       - name: Update Chart.yaml and package
         run: |
-          APP_VERSION="$RELEASE_VERSION"
+          APP_VERSION="$RELEASE_NAME"
           echo "Updating $CHART_FILE with appVersion=$APP_VERSION"
           sed -i "s/^appVersion:.*/appVersion: \"$APP_VERSION\"/" $CHART_FILE
           mkdir -p packaged
@@ -67,7 +67,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "🆕 Publish chart for release {{ github.repository_name }} ${{ github.event.release.tag_name }}"
+          git commit -m "🆕 Publish ${{ github.repository_name }} ${{ env.RELEASE_NAME }}"
           git push
 
       - name: Create Release

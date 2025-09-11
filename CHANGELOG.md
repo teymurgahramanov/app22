@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v2.0.0] - 2025-09-09
+## [v2.0.0] - 2025-09-12
 
 ### BREAKING CHANGES
 - **Framework Migration**: Complete migration from Flask to FastAPI

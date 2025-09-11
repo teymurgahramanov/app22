@@ -75,7 +75,7 @@ jobs:
         with:
           name: ${{ inputs.release-name }}
           tag: ${{ inputs.release-name }}
-          bodyFile: RELEASE_NOTES.md"
+          bodyFile: RELEASE_NOTES.md
           allowUpdates: true
           artifactErrorsFailBuild: true
           makeLatest: true

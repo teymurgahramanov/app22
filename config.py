@@ -128,6 +128,32 @@ class Config(BaseSettings):
                 return {}
         return v or {}
     
+    @field_validator('port', mode='before')
+    @classmethod
+    def parse_port(cls, v):
+        """Parse port from various formats including URLs."""
+        if isinstance(v, str):
+            # Handle URL format like 'tcp://10.105.27.158:5000'
+            if '://' in v:
+                # Extract port from URL
+                try:
+                    # Split by '://' and take the part after
+                    host_port = v.split('://', 1)[1]
+                    # If there's a colon, take the part after it as port
+                    if ':' in host_port:
+                        port_str = host_port.split(':', 1)[1]
+                        # Remove any path components after the port
+                        port_str = port_str.split('/')[0]
+                        return int(port_str)
+                except (ValueError, IndexError):
+                    pass
+            # Try to parse as integer directly
+            try:
+                return int(v)
+            except ValueError:
+                pass
+        return v
+    
     @field_validator('debug', mode='before')
     @classmethod
     def parse_debug(cls, v):

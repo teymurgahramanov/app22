@@ -2,5 +2,5 @@ apiVersion: v2
 name: app22
 description: App22 - A utility web application for labs and tests (Kubernetes ready)
 type: application
-version: 1.0.1
+version: 1.0.2
 appVersion: "v2.0.0"

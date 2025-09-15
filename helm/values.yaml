@@ -1,7 +1,7 @@
 image:
   repository: teymurgahramanov/app22
   tag: ""
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 replicaCount: 1
 

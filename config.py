@@ -134,6 +134,9 @@ class Config(BaseSettings):
         """Parse port from string to integer."""
         if isinstance(v, str):
             try:
+                # Handle URL-like strings by extracting the port number
+                if '://' in v:
+                    v = v.split(':')[-1]  # Get the last part after :
                 return int(v)
             except ValueError:
                 raise ValueError(f"Port must be a valid integer, got: {v}")

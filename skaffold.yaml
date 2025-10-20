@@ -1,0 +1,25 @@
+apiVersion: skaffold/v4beta8
+kind: Config
+metadata:
+  name: app22
+build:
+  local:
+    push: false
+  artifacts:
+    - image: app22local
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  helm:
+    releases:
+      - name: app22local
+        namespace: app22local
+        createNamespace: true
+        chartPath: ./helm
+        setValueTemplates:
+          image.repository: "{{ .IMAGE_REPO_app22local }}"
+          image.tag: "{{ .IMAGE_TAG_app22local }}"
+profiles:
+  - name: dev
+    activation:
+      - kubeContext: docker-desktop

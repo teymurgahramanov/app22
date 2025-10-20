@@ -12,7 +12,7 @@ With App22 you can do the following:
 🔄️ Experiment with deployment strategies: `/version` \
 💬 Exercise logging strategies: `/log` \
 ⚙️ Experiment with Kubernetes probes: `/healthz` \
-🗄️ Interact with SQL databases: `/sql` \
+🗄️ Interact with SQL databases (MySQL, PostgreSQL, Oracle): `/sql` \
 🍃 Interact with MongoDB: `/mongodb` \
 💾 Inspect files in mounted volumes/configs: `/cat` \
 📊 Simulate and scrape Prometheus metrics: `/metrics` \

@@ -14,7 +14,6 @@ env:
   HELM_REPO_OWNER: ${{ secrets.HELM_REPO_OWNER }}
   HELM_REPO_TOKEN: ${{ secrets.HELM_REPO_TOKEN }}
   RELEASE_NAME: ${{ github.event.inputs.release-name }}
-  CHART_FILE: helm/Chart.yaml
 
 jobs:
   release:
@@ -25,10 +24,29 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Update version and bump
+        run: |
+          APP_VERSION="${{ env.RELEASE_NAME }}"
+          CONFIG_FILE="config.py"
+          CHART_FILE="helm/Chart.yaml"
+
+          echo "Updating $CONFIG_FILE with version=$APP_VERSION"
+          sed -i "s/default=\".*\", description=\"Application version\"/default=\"$APP_VERSION\", description=\"Application version\"/" $CONFIG_FILE
+
+          echo "Updating $CHART_FILE with appVersion=$APP_VERSION"
+          sed -i "s/^appVersion:.*/appVersion: \"$APP_VERSION\"/" $CHART_FILE
+          sed -i "s/^version:.*/version: \"$APP_VERSION\"/" $CHART_FILE
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add $CONFIG_FILE $CHART_FILE
+          git commit -m "🔖 Bump version to $RELEASE_NAME" || echo "No changes to commit"
+          git push
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -36,7 +54,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -49,17 +67,11 @@ jobs:
         with:
           version: v3.13.0
 
-      - name: Update Chart.yaml and package
+      - name: Package and push Helm chart
         run: |
-          APP_VERSION="$RELEASE_NAME"
-          echo "Updating $CHART_FILE with appVersion=$APP_VERSION"
-          sed -i "s/^appVersion:.*/appVersion: \"$APP_VERSION\"/" $CHART_FILE
           mkdir -p packaged
           helm dependency update helm/
           helm package helm/ --destination packaged
-
-      - name: Push Helm chart
-        run: |
           REPO_NAME=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f2)
           git clone -b gh-pages --depth 1 https://${{ env.HELM_REPO_OWNER }}:${{ env.HELM_REPO_TOKEN }}@github.com/${{ env.HELM_REPO_OWNER }}/${{ env.HELM_REPO_NAME }}.git helm-charts
           mv -f packaged/*.tgz helm-charts/
@@ -76,19 +88,8 @@ jobs:
         with:
           name: ${{ inputs.release-name }}
           tag: ${{ inputs.release-name }}
-          bodyFile: RELEASE_NOTES.md
+          bodyFile: RELEASE.md
           allowUpdates: true
           artifactErrorsFailBuild: true
           makeLatest: true
-
-      - name: Bump Helm chart version
-        id: bump
-        run: |
-          CURRENT_CHART_VERSION=$(grep '^version:' $CHART_FILE | cut -d' ' -f2)
-          NEW_CHART_VERSION=$(echo $CURRENT_CHART_VERSION | awk -F. -v OFS=. '{$NF += 1 ; print}')
-          sed -i "s/^version:.*/version: $NEW_CHART_VERSION/" $CHART_FILE
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add $CHART_FILE
-          git commit -m "⬆️ Bump Helm chart version to $NEW_CHART_VERSION"
-          git push --force
+          draft: ${{ github.ref_name != 'main' }}

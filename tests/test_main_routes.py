@@ -52,4 +52,4 @@ class TestMainRoutes:
         assert "info" in data
         assert "paths" in data
         assert data["info"]["title"] == "App22"
-        assert data["info"]["version"] == "v1.0.0" 
+        assert data["info"]["version"] == "2.0.0" 

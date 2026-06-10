@@ -42,7 +42,7 @@ Default configuration [config.py](./config.py) can be overwritten using environm
 
 | Environment Variable | Default Value | Description |
 |---------------------|---------------|-------------|
-| `APP22_VERSION` | `v1.0.0` | Application version string. Useful for testing various deployment strategies. |
+| `APP22_VERSION` | `2.0.0` | Application version string. Useful for testing various deployment strategies. |
 | `APP22_SECRET_KEY` | `secret` | Secret key for session management and security. |
 | `APP22_DEBUG` | `false` | Enable debug mode. Set to `1`, `true`, `yes`, or `on` to enable. |
 | `APP22_HOST` | `0.0.0.0` | Server host address to bind to. |

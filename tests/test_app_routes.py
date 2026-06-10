@@ -13,7 +13,7 @@ class TestAppRoutes:
         # Should return the version as an object now
         data = response.json()
         assert "version" in data
-        assert data["version"] == "v1.0.0"
+        assert data["version"] == "2.0.0"
     
     def test_healthz_endpoint_healthy(self, test_client):
         """Test health check when system is healthy."""

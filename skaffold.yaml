@@ -6,20 +6,21 @@ build:
   local:
     push: false
   artifacts:
-    - image: app22local
+    - image: app22-dev
       docker:
         dockerfile: Dockerfile
 deploy:
   helm:
     releases:
-      - name: app22local
-        namespace: app22local
+      - name: app22-dev
+        namespace: app22-dev
         createNamespace: true
         chartPath: ./helm
         setValueTemplates:
-          image.repository: "{{ .IMAGE_REPO_app22local }}"
-          image.tag: "{{ .IMAGE_TAG_app22local }}"
+          image.repository: "{{ .IMAGE_REPO_app22-dev }}"
+          image.tag: "{{ .IMAGE_TAG_app22-dev }}"
 profiles:
-  - name: dev
+  - name: local
     activation:
-      - kubeContext: docker-desktop
+      - kubeContext: local
+        command: dev

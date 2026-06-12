@@ -36,7 +36,7 @@ def create_app():
     app = FastAPI(
         title="App22",
         description="The most useful web application to perform tests in the Kubernetes!",
-        version=config.version
+        version=config.version,
         docs_url="/docs",
         redoc_url="/redoc",
         openapi_tags=tags_metadata

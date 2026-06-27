@@ -21,6 +21,12 @@ affinity: {}
 
 env: {}
 
+envFrom: []
+# - configMapRef:
+#     name: app22-config
+# - secretRef:
+#     name: app22-secret
+
 ingress:
   enabled: false
   className: ""

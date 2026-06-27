@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v2.0.0] - 2025-09-12
+## [2.0.1] - 2026-06-27
+
+### Added
+- Helm chart support for `envFrom`, allowing pods to load environment variables from ConfigMaps and Secrets.
+
+### Changed
+- Helm deployment template now omits empty `env` and `envFrom` blocks when no environment sources are configured.
+
+## [2.0.0] - 2026-06-10
 
 ### BREAKING CHANGES
 - **Framework Migration**: Complete migration from Flask to FastAPI

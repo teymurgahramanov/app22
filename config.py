@@ -21,7 +21,7 @@ class Config(BaseSettings):
     )
     
     # Application Settings
-    version: Optional[str] = Field(default="2.0.0", description="Application version")
+    version: Optional[str] = Field(default="2.0.1", description="Application version")
     
     secret_key: str = Field(
         default="secret",

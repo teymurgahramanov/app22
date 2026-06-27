@@ -21,7 +21,14 @@ class Config(BaseSettings):
     )
     
     # Application Settings
+    app_title: str = Field(default="App22", description="Application title")
+    app_description: str = Field(
+        default="The most useful web application to perform tests in the Kubernetes!",
+        description="Application description",
+    )
     version: Optional[str] = Field(default="2.0.1", description="Application version")
+    docs_url: str = Field(default="/docs", description="Swagger UI documentation URL")
+    redoc_url: str = Field(default="/redoc", description="ReDoc documentation URL")
     
     secret_key: str = Field(
         default="secret",
@@ -150,6 +157,3 @@ class Config(BaseSettings):
 
 # Global configuration instance
 config = Config()
-
-# Backward compatibility - expose as class for existing code
-Config = config

@@ -9,13 +9,14 @@ from .mongodb import router as mongodb_router
 
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
+from config import config
 
 # Main router that includes all sub-routers
 router = APIRouter()
 
 @router.get("/", include_in_schema=False)
 def index():
-    return RedirectResponse(url="/docs")
+    return RedirectResponse(url=config.docs_url)
 
 # Include all route modules
 router.include_router(system_router)

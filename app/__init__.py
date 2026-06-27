@@ -34,11 +34,11 @@ tags_metadata = [
 
 def create_app():
     app = FastAPI(
-        title="App22",
-        description="The most useful web application to perform tests in the Kubernetes!",
+        title=config.app_title,
+        description=config.app_description,
         version=config.version,
-        docs_url="/docs",
-        redoc_url="/redoc",
+        docs_url=config.docs_url,
+        redoc_url=config.redoc_url,
         openapi_tags=tags_metadata
     )
     
@@ -60,4 +60,4 @@ def create_app():
     # Include router
     app.include_router(router)
     
-    return app 
+    return app

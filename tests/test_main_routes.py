@@ -1,5 +1,6 @@
 import pytest
 from fastapi import status
+from config import config
 
 
 class TestMainRoutes:
@@ -8,13 +9,13 @@ class TestMainRoutes:
     def test_index_redirect(self, test_client):
         """Test that index route redirects to docs."""
         response = test_client.get("/", allow_redirects=False)
-        
+
         assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
-        assert response.headers["location"] == "/docs"
-    
+        assert response.headers["location"] == config.docs_url
+
     def test_docs_endpoint_accessible(self, test_client):
         """Test that docs endpoint is accessible."""
-        response = test_client.get("/docs")
+        response = test_client.get(config.docs_url)
         
         assert response.status_code == status.HTTP_200_OK
         # Should contain FastAPI docs content
@@ -22,7 +23,7 @@ class TestMainRoutes:
     
     def test_redoc_endpoint_accessible(self, test_client):
         """Test that redoc endpoint is accessible."""
-        response = test_client.get("/redoc")
+        response = test_client.get(config.redoc_url)
         
         assert response.status_code == status.HTTP_200_OK
         # Should contain ReDoc content
@@ -51,5 +52,5 @@ class TestMainRoutes:
         assert "openapi" in data
         assert "info" in data
         assert "paths" in data
-        assert data["info"]["title"] == "App22"
-        assert data["info"]["version"] == "2.0.0" 
+        assert data["info"]["title"] == config.app_title
+        assert data["info"]["version"] == config.version

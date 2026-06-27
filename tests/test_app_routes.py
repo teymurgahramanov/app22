@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import patch
 from fastapi import status
+from config import config
 
 
 class TestAppRoutes:
@@ -13,7 +14,7 @@ class TestAppRoutes:
         # Should return the version as an object now
         data = response.json()
         assert "version" in data
-        assert data["version"] == "2.0.0"
+        assert data["version"] == config.version
     
     def test_healthz_endpoint_healthy(self, test_client):
         """Test health check when system is healthy."""
@@ -112,4 +113,4 @@ class TestAppRoutes:
         assert data["success"] is True
         # Newlines should be replaced with spaces
         assert "\n" not in data["logged_message"]
-        assert "\r" not in data["logged_message"] 
+        assert "\r" not in data["logged_message"]
